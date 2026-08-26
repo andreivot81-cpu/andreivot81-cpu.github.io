@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Панель — выполнение плана по брендам, 3 кв. 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#12161C;
+    --panel:#1A1F27;
+    --panel-2:#1F2530;
+    --line:#2B3240;
+    --line-soft:#242A35;
+    --ink:#EBEEF2;
+    --ink-dim:#98A2B3;
+    --ink-faint:#5C6675;
+    --amber:#F2A93B;
+    --amber-dim:#7A5A22;
+    --green:#4FB07A;
+    --green-dim:#1F3B2C;
+    --red:#E2604F;
+    --red-dim:#40241F;
+    --blue:#5B8DEF;
+    --gold:#E7C465;
+    --gold-dim:#4A3B1A;
+    --silver:#C9D2DC;
+    --bronze:#C98A55;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #1B222C 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:28px 20px 60px;
+  }
+  .mono{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:14px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px; margin-bottom:22px;
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px; margin-bottom:6px;
+  }
+  .brand-mark .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 8px 2px rgba(242,169,59,.55);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-faint);
+  }
+  h1{font-size:23px; margin:2px 0 4px; font-weight:600; letter-spacing:-.01em;}
+  .subline{color:var(--ink-dim); font-size:13.5px;}
+  .updated{
+    text-align:right; font-size:11.5px; color:var(--ink-faint);
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  }
+  .updated b{color:var(--ink-dim); font-weight:500;}
+
+  /* ---------- KPI strip ---------- */
+  .kpi-row{
+    display:grid; grid-template-columns: 1.35fr 1fr 1fr 1fr 1.15fr;
+    gap:12px; margin-bottom:26px;
+  }
+  .kpi{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); padding:16px 16px 14px;
+    position:relative; overflow:hidden;
+  }
+  .kpi::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:var(--kc, var(--amber));
+  }
+  .kpi-label{
+    font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; margin-bottom:10px;
+  }
+  .kpi-val{font-size:22px; font-weight:600; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; line-height:1;}
+  .kpi-sub{font-size:11.5px; color:var(--ink-dim); margin-top:6px;}
+
+  /* circular gauge kpi */
+  .kpi-gauge{display:flex; align-items:center; gap:14px;}
+  .kpi-gauge svg{flex:none;}
+  .kpi-gauge .gtext{font-size:20px;font-weight:700;font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px; margin-bottom:14px;
+  }
+  .seg{
+    display:inline-flex; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:3px; gap:2px;
+  }
+  .seg button{
+    all:unset; cursor:pointer; padding:6px 13px; font-size:12.5px; border-radius:6px;
+    color:var(--ink-dim); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .seg button.active{background:var(--panel-2); color:var(--ink); font-weight:600;}
+  .seg button:hover:not(.active){color:var(--ink);}
+
+  select{
+    all:unset; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:7px 12px; font-size:12.5px; color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif; cursor:pointer;
+  }
+  .count{font-size:12px; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
+
+  /* ---------- legend ---------- */
+  .legend{display:flex; gap:16px; font-size:11.5px; color:var(--ink-dim); margin-bottom:14px; flex-wrap:wrap;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+  /* ---------- rows (breaker cards) ---------- */
+  .board{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .col-hdr{
+    display:grid; grid-template-columns: 22px 1.9fr 1fr 1fr 1fr .8fr;
+    gap:14px; padding:10px 18px; font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    border-bottom:1px solid var(--line);
+  }
+  .col-hdr span:nth-child(n+3){text-align:right;}
+  .row{
+    display:grid; grid-template-columns: 22px 1.9fr 1fr 1fr 1fr .8fr;
+    gap:14px; align-items:center; padding:13px 18px;
+    border-bottom:1px solid var(--line-soft);
+    transition:background .15s ease;
+  }
+  .row:last-child{border-bottom:none;}
+  .row:hover{background:var(--panel-2);}
+  .row{padding:13px 34px 13px 18px; position:relative; cursor:pointer;}
+  .row.no-mgr{cursor:default;}
+
+  .chev{
+    position:absolute; right:12px; top:50%; margin-top:-8px;
+    width:16px; height:16px; color:var(--ink-faint);
+    transition:transform .25s ease, color .25s ease;
+  }
+  .row.open .chev{transform:rotate(90deg); color:var(--amber);}
+  .row.no-mgr .chev{visibility:hidden;}
+
+  .led{
+    width:10px;height:10px;border-radius:50%; margin:0 auto;
+    background:var(--c); box-shadow:0 0 7px 1px color-mix(in srgb, var(--c) 70%, transparent);
+  }
+
+  .name-cell{min-width:0;}
+  .name-cell .tier{
+    font-size:9.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing:.07em;
+    color:var(--ink-faint); text-transform:uppercase;
+  }
+  .name-cell .nm{
+    font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    margin-top:1px;
+  }
+
+  .gauge-cell{min-width:0;}
+  .gauge-track{
+    position:relative; height:8px; border-radius:5px; background:#252B36;
+    overflow:visible; margin-bottom:5px;
+  }
+  .gauge-fill{
+    position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--c);
+  }
+  .gauge-target{
+    position:absolute; top:-3px; bottom:-3px; width:2px; background:#C8CEDA;
+    opacity:.85;
+  }
+  .gauge-target::after{
+    content:''; position:absolute; top:-3px; left:50%; transform:translateX(-50%);
+    width:0;height:0; border-left:3px solid transparent; border-right:3px solid transparent;
+    border-top:3px solid #C8CEDA;
+  }
+  .gauge-pct{font-size:12.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-weight:600; color:var(--c);}
+
+  .num-cell{text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:13px;}
+  .num-cell .lbl{display:block; font-size:9.5px; color:var(--ink-faint); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif; margin-bottom:2px;}
+
+  .dyn-cell{text-align:right;}
+  .dyn-badge{
+    display:inline-block; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px; font-weight:700;
+    padding:3px 8px; border-radius:5px; background:var(--bgc); color:var(--c);
+  }
+
+  /* ---------- турнирная таблица менеджеров (арена) ---------- */
+  .leaderboard-panel{
+    max-height:0; overflow:hidden;
+    transition:max-height .35s ease;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .leaderboard-panel.open{max-height:1400px;}
+  .leaderboard-inner{
+    padding:16px 20px 20px;
+    background:
+      radial-gradient(520px 180px at 50% -60px, rgba(242,169,59,.09), transparent 70%),
+      #14181F;
+  }
+  .lb-title{
+    font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    margin-bottom:10px; display:flex; align-items:center; gap:8px;
+  }
+  .lb-title::after{content:''; flex:1; height:1px; background:var(--line-soft);}
+
+  .tribute-row{
+    display:flex; align-items:center; gap:12px;
+    padding:8px 10px; border-radius:8px;
+    border:1px solid transparent;
+  }
+  .tribute-row + .tribute-row{margin-top:3px;}
+  .tribute-row.rank-1{
+    background:linear-gradient(90deg, rgba(231,196,101,.10), transparent 70%);
+    border-color:rgba(231,196,101,.25);
+  }
+  .tribute-row.rank-2{background:rgba(201,210,220,.05);}
+  .tribute-row.rank-3{background:rgba(201,138,85,.06);}
+
+  .tribute-rank{
+    width:20px; flex:none; text-align:center; font-weight:700; font-size:12px;
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    color:var(--ink-faint);
+  }
+  .tribute-rank.gold{color:var(--gold);}
+  .tribute-rank.silver{color:var(--silver);}
+  .tribute-rank.bronze{color:var(--bronze);}
+
+  .tribute-avatar{
+    width:32px; height:32px; border-radius:50%; flex:none;
+    background:var(--panel-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+    overflow:hidden;
+  }
+  .tribute-avatar img{width:100%; height:100%; object-fit:cover;}
+  .tribute-avatar.gold{box-shadow:0 0 0 2px var(--gold), 0 0 12px 2px rgba(231,196,101,.4);}
+  .tribute-avatar.silver{box-shadow:0 0 0 2px var(--silver);}
+  .tribute-avatar.bronze{box-shadow:0 0 0 2px var(--bronze);}
+
+  .tribute-name{flex:1 1 auto; min-width:0;}
+  .tribute-name .nm{
+    font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    display:flex; align-items:center; gap:6px;
+  }
+  .tribute-name .fire{font-size:11px;}
+  .tribute-name .sec{
+    font-size:9.5px; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    text-transform:uppercase; letter-spacing:.05em; margin-top:1px;
+  }
+
+  .tribute-fact{
+    flex:none; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-size:12.5px; min-width:92px;
+  }
+  .tribute-fact .lbl{display:block; font-size:8.5px; color:var(--ink-faint); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight:400;}
+
+  .tribute-plan{display:flex; align-items:center; gap:8px; flex:none;}
+  .mini-gauge{position:relative; width:64px; height:6px; border-radius:4px; background:#252B36;}
+  .mini-gauge i{position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:var(--c);}
+  .tribute-pct{
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px;
+    font-weight:600; color:var(--c); min-width:48px; text-align:right;
+  }
+  .tribute-dyn{
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:10.5px; font-weight:700;
+    padding:2px 6px; border-radius:4px; background:var(--bgc); color:var(--c); min-width:44px; text-align:center;
+  }
+  .tribute-noplan{
+    flex:none; font-size:10.5px; color:var(--ink-faint); font-style:italic; min-width:90px; text-align:right;
+  }
+
+  @media (max-width:760px){
+    .tribute-row{flex-wrap:wrap;}
+    .tribute-plan{width:100%; padding-left:44px; margin-top:2px;}
+  }
+
+  footer{
+    margin-top:20px; font-size:11.5px; color:var(--ink-faint); line-height:1.6;
+    border-top:1px solid var(--line); padding-top:14px;
+  }
+  footer b{color:var(--ink-dim);}
+
+  @media (max-width: 760px){
+    .kpi-row{grid-template-columns:1fr 1fr;}
+    .col-hdr{display:none;}
+    .row{grid-template-columns: 16px 1fr; row-gap:8px;}
+    .row .num-cell, .row .dyn-cell{grid-column:2; text-align:left;}
+    .row .gauge-cell{grid-column:2;}
+    .num-cell .lbl{display:inline; margin-right:4px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand-mark"><span class="dot"></span><span class="eyebrow">ТулРЦП Рязань · Панель контроля</span></div>
+      <h1>Выполнение плана продаж по брендам</h1>
+      <div class="subline">3 квартал 2026 · период 01.07.2026 – 30.09.2026</div>
+    </div>
+    <div class="updated">СНИМОК ДАННЫХ<br><b id="snapTime">—</b></div>
+  </header>
+
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <div class="controls">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <div class="seg" id="tierSeg">
+        <button data-tier="all" class="active">Все</button>
+        <button data-tier="ТОП">ТОП</button>
+        <button data-tier="Премиум">Премиум</button>
+      </div>
+      <select id="sortSel">
+        <option value="pct_desc">Сортировка: % выполнения ↓</option>
+        <option value="pct_asc">% выполнения ↑</option>
+        <option value="deficit_desc">Дефицит ↓</option>
+        <option value="plan_desc">План ↓</option>
+        <option value="dyn_asc">Отставание от графика</option>
+        <option value="az">По алфавиту</option>
+      </select>
+    </div>
+    <div class="count" id="cnt"></div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> опережает график (темп ≥ 100%)</span>
+    <span><i style="background:var(--amber)"></i> близко к графику (70–100%)</span>
+    <span><i style="background:var(--red)"></i> критично отстаёт (&lt; 70%)</span>
+    <span style="color:var(--ink-faint)">▲ метка на шкале — доля прошедшего времени квартала (~56.7%)</span>
+  </div>
+
+  <div class="board">
+    <div class="col-hdr">
+      <span></span><span>Бренд</span><span>План / Факт</span><span>Дефицит</span><span>Выполнение</span><span>Темп</span>
+    </div>
+    <div id="rows"></div>
+  </div>
+
+  <footer>
+    <b>Методика:</b> «Темп» = % выполнения ÷ доля прошедшего времени квартала (формула источника, лист «Бренды», столбец «Динамика»).
+    100% значит бренд идёт ровно по графику равномерного выполнения плана; выше — опережение, ниже — отставание.
+    В турнирной таблице показаны только действующие сотрудники — часть факта бренда может приходиться на уволенных менеджеров, поэтому сумма по списку может быть меньше факта бренда.
+    Данные — снимок на момент выгрузки исходного файла, не обновляются автоматически.
+    Источник: <b>ТулРЦП_Рязань_BRAND_PLAN_3_кв_2026.xlsx</b>, листы «Бренды» и «Факт по менеджерам».
+  </footer>
+
+</div>
+
+<script>
+const DATA = {"rows": [{"full": "ТОП_ЭРА", "tier": "ТОП", "brand": "ЭРА", "plan": 3813763.0, "fact": 3115649.94, "pct": 0.8169, "deficit": 698113.06, "dyn": 1.348, "managers": [{"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 988763.28}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 907900.64}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 442826.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 226837.73}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 194454.46}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 126066.14}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 96566.88}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 47712.88}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 47674.8}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 39680.08}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 32077.42}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 12834.33}]}, {"full": "ТОП_Русский Свет", "tier": "ТОП", "brand": "Русский Свет", "plan": 3165801.0, "fact": 2526032.63, "pct": 0.7979, "deficit": 639768.37, "dyn": 1.3166, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 733902.78, "plan": 500000.0, "pct": 1.4678, "dyn": 2.4219}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 642252.83, "plan": 500000.0, "pct": 1.2845, "dyn": 2.1194}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 528662.4, "plan": 500000.0, "pct": 1.0573, "dyn": 1.7446}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 195862.01, "plan": 500000.0, "pct": 0.3917, "dyn": 0.6463}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 121890.63, "plan": 500000.0, "pct": 0.2438, "dyn": 0.4022}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 102883.41, "plan": 500000.0, "pct": 0.2058, "dyn": 0.3395}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 90099.45, "plan": 500000.0, "pct": 0.1802, "dyn": 0.2973}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 65258.97, "plan": 500000.0, "pct": 0.1305, "dyn": 0.2154}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 45638.97, "plan": 500000.0, "pct": 0.0913, "dyn": 0.1506}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 15651.08, "plan": 500000.0, "pct": 0.0313, "dyn": 0.0516}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0, "plan": 500000.0, "pct": 0.0, "dyn": 0.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 0.0, "plan": 500000.0, "pct": 0.0, "dyn": 0.0}]}, {"full": "ТОП_TOKOV ELECTRIC", "tier": "ТОП", "brand": "TOKOV ELECTRIC", "plan": 9608554.0, "fact": 6973888.45, "pct": 0.7258, "deficit": 2634665.55, "dyn": 1.1976, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 2759861.83, "plan": 1500000.0, "pct": 1.8399, "dyn": 3.0358}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 838261.67, "plan": 1500000.0, "pct": 0.5588, "dyn": 0.9221}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 833560.53, "plan": 1500000.0, "pct": 0.5557, "dyn": 0.9169}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 639566.79, "plan": 1500000.0, "pct": 0.4264, "dyn": 0.7035}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 495943.67, "plan": 1500000.0, "pct": 0.3306, "dyn": 0.5455}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 431419.18, "plan": 1500000.0, "pct": 0.2876, "dyn": 0.4746}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 364918.7, "plan": 1500000.0, "pct": 0.2433, "dyn": 0.4014}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 293453.57, "plan": 1500000.0, "pct": 0.1956, "dyn": 0.3228}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 214090.07, "plan": 1500000.0, "pct": 0.1427, "dyn": 0.2355}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 163154.92, "plan": 1500000.0, "pct": 0.1088, "dyn": 0.1795}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 158966.56, "plan": 1500000.0, "pct": 0.106, "dyn": 0.1749}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 45169.76, "plan": 1500000.0, "pct": 0.0301, "dyn": 0.0497}]}, {"full": "Премиум_Opticell", "tier": "Премиум", "brand": "Opticell", "plan": 624026.0, "fact": 451708.8, "pct": 0.7239, "deficit": 172317.2, "dyn": 1.1944, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 422569.77}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 16753.4}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 7363.68}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2945.47}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1578.78}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 497.7}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "ТОП_Systeme Electric", "tier": "ТОП", "brand": "Systeme Electric", "plan": 11884950.0, "fact": 8151416.2, "pct": 0.6859, "deficit": 3733533.8, "dyn": 1.1317, "managers": [{"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3219964.82}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 2145556.6}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1244288.39}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 743729.21}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 428872.27}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 138039.16}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 131871.37}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 66019.33}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 54953.71}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 50722.23}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 30800.51}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 4302.33}]}, {"full": "Премиум_Universal", "tier": "Премиум", "brand": "Universal", "plan": 4228686.0, "fact": 2700142.62, "pct": 0.6385, "deficit": 1528543.38, "dyn": 1.0536, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 1677202.11}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 819723.1}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 140509.4}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 26616.4}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 23134.88}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 17039.01}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 12576.98}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2654.18}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 600.09}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 549.07}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 499.9}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}]}, {"full": "ТОП_JAZZWAY", "tier": "ТОП", "brand": "JAZZWAY", "plan": 4006459.0, "fact": 2428079.09, "pct": 0.606, "deficit": 1578379.91, "dyn": 1.0, "managers": [{"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 875495.38}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 434069.04}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 370061.02}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 188947.7}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 175738.71}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 108742.08}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 105723.9}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 64147.77}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 55341.07}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 55322.9}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 39506.47}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 14174.8}]}, {"full": "ТОП_EKF", "tier": "ТОП", "brand": "EKF", "plan": 25813972.0, "fact": 13821716.88, "pct": 0.5354, "deficit": 11992255.12, "dyn": 0.8835, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 6091312.5, "plan": 800000.0, "pct": 7.6141, "dyn": 12.5633}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1712146.3, "plan": 800000.0, "pct": 2.1402, "dyn": 3.5313}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 1666385.47, "plan": 800000.0, "pct": 2.083, "dyn": 3.4369}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1193527.7, "plan": 800000.0, "pct": 1.4919, "dyn": 2.4617}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1036079.95, "plan": 800000.0, "pct": 1.2951, "dyn": 2.1369}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 758808.25, "plan": 800000.0, "pct": 0.9485, "dyn": 1.565}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 707608.5, "plan": 800000.0, "pct": 0.8845, "dyn": 1.4594}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 703138.58, "plan": 800000.0, "pct": 0.8789, "dyn": 1.4502}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 699497.13, "plan": 800000.0, "pct": 0.8744, "dyn": 1.4427}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 397949.71, "plan": 800000.0, "pct": 0.4974, "dyn": 0.8208}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 312853.67, "plan": 800000.0, "pct": 0.3911, "dyn": 0.6453}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 181144.97, "plan": 800000.0, "pct": 0.2264, "dyn": 0.3736}]}, {"full": "ТОП_СИСТЕМА КМ", "tier": "ТОП", "brand": "СИСТЕМА КМ", "plan": 3553357.0, "fact": 1894418.3, "pct": 0.5331, "deficit": 1658938.7, "dyn": 0.8797, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1391872.46}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 236963.77}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 103872.65}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 85224.58}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 42515.52}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 20412.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 19118.43}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5873.2}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 3826.16}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2210.55}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_DKC", "tier": "ТОП", "brand": "DKC", "plan": 45044387.0, "fact": 21181059.75, "pct": 0.4702, "deficit": 23863327.25, "dyn": 0.7759, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 5022026.36, "plan": 1000000.0, "pct": 5.022, "dyn": 8.2863}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 3747579.5, "plan": 1000000.0, "pct": 3.7476, "dyn": 6.1835}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2592164.29, "plan": 1000000.0, "pct": 2.5922, "dyn": 4.2771}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 2501814.12, "plan": 1000000.0, "pct": 2.5018, "dyn": 4.128}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1863876.86, "plan": 1000000.0, "pct": 1.8639, "dyn": 3.0754}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1319231.89, "plan": 1000000.0, "pct": 1.3192, "dyn": 2.1767}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1280081.21, "plan": 1000000.0, "pct": 1.2801, "dyn": 2.1121}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 1260476.11, "plan": 1000000.0, "pct": 1.2605, "dyn": 2.0798}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 844610.86, "plan": 1000000.0, "pct": 0.8446, "dyn": 1.3936}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 840240.57, "plan": 1000000.0, "pct": 0.8402, "dyn": 1.3864}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 409213.66, "plan": 1000000.0, "pct": 0.4092, "dyn": 0.6752}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 127274.92, "plan": 1000000.0, "pct": 0.1273, "dyn": 0.21}]}, {"full": "ТОП_ГК IEK", "tier": "ТОП", "brand": "ГК IEK", "plan": 69218740.0, "fact": 30372103.8, "pct": 0.4388, "deficit": 38846636.2, "dyn": 0.724, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 6076419.46, "plan": 2000000.0, "pct": 3.0382, "dyn": 5.013}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 5704451.22, "plan": 2000000.0, "pct": 2.8522, "dyn": 4.7062}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3857607.79, "plan": 2000000.0, "pct": 1.9288, "dyn": 3.1825}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 2619963.9, "plan": 2000000.0, "pct": 1.31, "dyn": 2.1615}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2369545.16, "plan": 2000000.0, "pct": 1.1848, "dyn": 1.9549}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2175262.43, "plan": 2000000.0, "pct": 1.0876, "dyn": 1.7946}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2096659.36, "plan": 2000000.0, "pct": 1.0483, "dyn": 1.7297}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1953495.47, "plan": 2000000.0, "pct": 0.9767, "dyn": 1.6116}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 1692104.14, "plan": 2000000.0, "pct": 0.8461, "dyn": 1.396}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 936425.41, "plan": 2000000.0, "pct": 0.4682, "dyn": 0.7726}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 840582.99, "plan": 2000000.0, "pct": 0.4203, "dyn": 0.6935}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 612277.75, "plan": 2000000.0, "pct": 0.3061, "dyn": 0.5051}]}, {"full": "Премиум_Rexant", "tier": "Премиум", "brand": "Rexant", "plan": 3537877.0, "fact": 1489441.7, "pct": 0.421, "deficit": 2048435.3, "dyn": 0.6946, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 255961.27}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 221571.31}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 215217.14}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 187315.07}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 152332.82}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 145512.1}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 134622.01}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 74242.25}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 47867.1}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 40552.01}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 25755.42}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 17062.47}]}, {"full": "Премиум_IN HOME", "tier": "Премиум", "brand": "IN HOME", "plan": 4395969.0, "fact": 1667279.93, "pct": 0.3793, "deficit": 2728689.07, "dyn": 0.6258, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 549949.64}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 397084.35}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 368644.76}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 144876.56}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 109391.52}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 35491.63}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 34584.19}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 25492.57}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 24759.18}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 10113.01}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 7689.81}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4623.79}]}, {"full": "Премиум_Arlight", "tier": "Премиум", "brand": "Arlight", "plan": 3691429.0, "fact": 1395306.22, "pct": 0.378, "deficit": 2296122.78, "dyn": 0.6237, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 774163.67}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 410083.86}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 110704.37}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 44594.28}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 41790.27}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 6827.91}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 4850.09}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 2291.77}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}]}, {"full": "ТОП_КЭАЗ", "tier": "ТОП", "brand": "КЭАЗ", "plan": 5409444.0, "fact": 1994248.37, "pct": 0.3687, "deficit": 3415195.63, "dyn": 0.6083, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 820182.12}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 305757.54}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 192392.7}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 157347.11}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 152925.33}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 101025.24}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 84722.66}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 69509.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 64516.59}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 42843.68}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 16959.29}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 11289.68}]}, {"full": "ТОП_DEKraft", "tier": "ТОП", "brand": "DEKraft", "plan": 8009681.0, "fact": 2864434.55, "pct": 0.3576, "deficit": 5145246.45, "dyn": 0.5901, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1575586.91}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 299858.7}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 281480.07}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 232359.11}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 219450.07}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 77396.73}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 72858.75}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 52839.4}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 50746.6}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 44709.03}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 13961.17}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 7029.97}]}, {"full": "ТОП_NAVIGATOR", "tier": "ТОП", "brand": "NAVIGATOR", "plan": 5877739.0, "fact": 2016369.3, "pct": 0.3431, "deficit": 3861369.7, "dyn": 0.566, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 751775.94}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 536415.71}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 269428.96}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 169147.8}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 105516.32}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 88569.31}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 60198.14}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 36466.85}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 33536.53}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 26838.5}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 26207.05}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 8970.7}]}, {"full": "ТОП_VARTON", "tier": "ТОП", "brand": "VARTON", "plan": 10311794.0, "fact": 3482889.27, "pct": 0.3378, "deficit": 6828904.73, "dyn": 0.5573, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 3503841.69}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 19824.61}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 15466.31}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 5051.17}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4113.11}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 2027.88}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_CHINT", "tier": "ТОП", "brand": "CHINT", "plan": 12333252.0, "fact": 3227661.84, "pct": 0.2617, "deficit": 9105590.16, "dyn": 0.4318, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1467415.35}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 392534.59}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 383097.29}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 305463.36}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 278804.12}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 179933.25}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 105748.57}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 91572.15}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 14642.88}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 8766.11}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 8018.34}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 51.95}]}, {"full": "Премиум_SUPR", "tier": "Премиум", "brand": "SUPR", "plan": 577013.0, "fact": 109631.27, "pct": 0.19, "deficit": 467381.73, "dyn": 0.3135, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 35090.74}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 34150.3}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 15604.95}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 13311.76}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 5010.54}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2740.12}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 1607.05}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 1548.91}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1406.75}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Энергомера", "tier": "Премиум", "brand": "Энергомера", "plan": 9382191.0, "fact": 1664257.35, "pct": 0.1774, "deficit": 7717933.65, "dyn": 0.2927, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1340675.37}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 194399.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 47396.55}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 23189.97}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 17306.79}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 12744.01}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 10392.04}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 8910.02}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4920.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2853.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 1470.6}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Ledvance", "tier": "Премиум", "brand": "Ledvance", "plan": 1745668.0, "fact": 271262.42, "pct": 0.1554, "deficit": 1474405.58, "dyn": 0.2564, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 106038.3}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 55412.3}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 55207.9}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 39332.8}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 8332.75}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5442.37}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 2973.46}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1032.32}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "ТОП_LED-effect", "tier": "ТОП", "brand": "LED-effect", "plan": 10943130.0, "fact": 252419.77, "pct": 0.0231, "deficit": 10690710.23, "dyn": 0.0381, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 252419.77}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}], "totals": {"plan": 257177882.0, "fact": 114051418.45, "pct": 0.4434728895154366, "deficit": 143126463.55}};
+
+const fmtRub = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(Math.round(n)) + ' \u20BD';
+const fmtPct = n => (n*100).toFixed(1).replace('.', ',') + '%';
+
+function statusColor(dyn){
+  if (dyn >= 1.0) return {c:'var(--green)', bg:'var(--green-dim)'};
+  if (dyn >= 0.7) return {c:'var(--amber)', bg:'var(--amber-dim)'};
+  return {c:'var(--red)', bg:'var(--red-dim)'};
+}
+
+// ---- доля прошедшего времени (выведена из данных: pct/dyn, константа по всем строкам) ----
+const elapsedFrac = DATA.rows.reduce((s,r)=>s+r.pct/r.dyn,0)/DATA.rows.length;
+
+// ---- дата снимка (по среднему elapsed, относительно квартала 01.07-30.09.2026) ----
+(function(){
+  const start = new Date('2026-07-01T00:00:00');
+  const end = new Date('2026-09-30T00:00:00');
+  const snap = new Date(start.getTime() + elapsedFrac*(end.getTime()-start.getTime()));
+  document.getElementById('snapTime').textContent = snap.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+})();
+
+// ---- аватары-заглушки: детерминированное животное на менеджера (до появления реальных фото) ----
+const ANIMALS = ['\u{1F98A}','\u{1F43C}','\u{1F981}','\u{1F42F}','\u{1F428}','\u{1F430}','\u{1F989}','\u{1F43A}','\u{1F985}','\u{1F438}','\u{1F422}','\u{1F984}','\u{1F417}','\u{1F99D}','\u{1F43B}','\u{1F993}'];
+function animalFor(name){
+  let h = 0;
+  for (let i=0;i<name.length;i++) h = (h*31 + name.charCodeAt(i)) >>> 0;
+  return ANIMALS[h % ANIMALS.length];
+}
+function avatarHTML(m){
+  if (m.photo) return `<img src="${m.photo}" alt="">`;
+  return animalFor(m.name);
+}
+function shortName(fio){
+  const parts = fio.trim().split(/\s+/);
+  return parts.length >= 2 ? `${parts[0]} ${parts[1]}` : fio;
+}
+function sectorShort(sector){
+  if (!sector) return '';
+  const m = sector.match(/Сектор\s+(.+)/i);
+  return m ? m[1] : sector;
+}
+function chevronSVG(){
+  return `<svg class="chev" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function renderLeaderboard(row){
+  if (!row.managers || !row.managers.length) return '';
+  const rankClass = i => i===0?'gold':i===1?'silver':i===2?'bronze':'';
+  const items = row.managers.map((m, i)=>{
+    const rc = rankClass(i);
+    const hasPlan = m.plan !== undefined && m.plan !== null;
+    let planBlock;
+    if (hasPlan){
+      const s = statusColor(m.dyn);
+      const w = Math.min((m.pct||0)*100, 100);
+      planBlock = `
+        <div class="tribute-plan">
+          <div class="mini-gauge"><i style="width:${w}%; --c:${s.c}"></i></div>
+          <div class="tribute-pct" style="--c:${s.c}">${fmtPct(m.pct)}</div>
+          <div class="tribute-dyn" style="--c:${s.c}; --bgc:${s.bg}">${fmtPct(m.dyn)}</div>
+        </div>`;
+    } else {
+      planBlock = `<div class="tribute-noplan">без личного плана</div>`;
+    }
+    return `
+      <div class="tribute-row rank-${i+1<=3?i+1:'x'}">
+        <div class="tribute-rank ${rc}">${i+1}</div>
+        <div class="tribute-avatar ${rc}">${avatarHTML(m)}</div>
+        <div class="tribute-name">
+          <div class="nm">${shortName(m.name)}${i===0?'<span class="fire">\u{1F525}</span>':''}</div>
+          <div class="sec">${sectorShort(m.sector)}</div>
+        </div>
+        <div class="tribute-fact"><span class="lbl">Факт</span>${fmtRub(m.fact)}</div>
+        ${planBlock}
+      </div>`;
+  }).join('');
+  return `
+    <div class="leaderboard-inner">
+      <div class="lb-title">Турнирная таблица \u00b7 ${row.managers.length} менеджеров</div>
+      ${items}
+    </div>`;
+}
+
+// ================= KPI =================
+const t = DATA.totals;
+const overallDyn = (t.fact/t.plan)/elapsedFrac;
+const kpiRow = document.getElementById('kpiRow');
+
+function gaugeSVG(pct, color){
+  const r = 30, c = 2*Math.PI*r, off = c*(1-Math.min(pct,1));
+  return `<svg width="72" height="72" viewBox="0 0 72 72">
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="#252B36" stroke-width="7"/>
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="${color}" stroke-width="7"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
+      transform="rotate(-90 36 36)"/>
+  </svg>`;
+}
+
+kpiRow.innerHTML = `
+  <div class="kpi" style="--kc:var(--ink-dim)">
+    <div class="kpi-label">План, 3 кв.</div>
+    <div class="kpi-val">${fmtRub(t.plan)}</div>
+    <div class="kpi-sub">23 бренда</div>
+  </div>
+  <div class="kpi" style="--kc:var(--ink-dim)">
+    <div class="kpi-label">Факт, 3 кв.</div>
+    <div class="kpi-val">${fmtRub(t.fact)}</div>
+    <div class="kpi-sub">отгружено на снимок</div>
+  </div>
+  <div class="kpi" style="--kc:var(--amber)">
+    <div class="kpi-label">% выполнения</div>
+    <div class="kpi-gauge">
+      ${gaugeSVG(t.pct, 'var(--amber)')}
+      <div><div class="gtext">${fmtPct(t.pct)}</div><div class="kpi-sub">факт / план</div></div>
+    </div>
+  </div>
+  <div class="kpi" style="--kc:var(--red)">
+    <div class="kpi-label">Дефицит</div>
+    <div class="kpi-val" style="color:var(--red)">${fmtRub(t.deficit)}</div>
+    <div class="kpi-sub">не довыполнено</div>
+  </div>
+  <div class="kpi" style="--kc:${overallDyn>=1?'var(--green)':overallDyn>=0.7?'var(--amber)':'var(--red)'}">
+    <div class="kpi-label">Темп к графику</div>
+    <div class="kpi-val" style="color:${overallDyn>=1?'var(--green)':overallDyn>=0.7?'var(--amber)':'var(--red)'}">${fmtPct(overallDyn)}</div>
+    <div class="kpi-sub">100% = точно по графику</div>
+  </div>
+`;
+
+// ================= Rows =================
+const rowsEl = document.getElementById('rows');
+const cntEl = document.getElementById('cnt');
+let tierFilter = 'all';
+let sortMode = 'pct_desc';
+const openBrands = new Set();
+
+function render(){
+  let items = DATA.rows.filter(r => tierFilter==='all' || r.tier===tierFilter);
+  const sorters = {
+    pct_desc: (a,b)=>b.pct-a.pct,
+    pct_asc: (a,b)=>a.pct-b.pct,
+    deficit_desc: (a,b)=>b.deficit-a.deficit,
+    plan_desc: (a,b)=>b.plan-a.plan,
+    dyn_asc: (a,b)=>a.dyn-b.dyn,
+    az: (a,b)=>a.brand.localeCompare(b.brand,'ru'),
+  };
+  items = items.slice().sort(sorters[sortMode]);
+  cntEl.textContent = `${items.length} из ${DATA.rows.length}`;
+
+  rowsEl.innerHTML = items.map(r=>{
+    const s = statusColor(r.dyn);
+    const pctW = Math.min(r.pct*100, 100);
+    const hasMgr = r.managers && r.managers.length > 0;
+    const isOpen = hasMgr && openBrands.has(r.full);
+    return `
+    <div class="row ${hasMgr?'':'no-mgr'} ${isOpen?'open':''}" data-brand="${r.full}">
+      <div class="led" style="--c:${s.c}"></div>
+      <div class="name-cell">
+        <div class="tier">${r.tier || '—'}</div>
+        <div class="nm" title="${r.full}">${r.brand}</div>
+      </div>
+      <div class="num-cell">
+        <span class="lbl">План</span>${fmtRub(r.plan)}<br>
+        <span class="lbl" style="margin-top:4px;display:inline-block">Факт</span>${fmtRub(r.fact)}
+      </div>
+      <div class="num-cell" style="color:var(--red)">${fmtRub(r.deficit)}</div>
+      <div class="gauge-cell">
+        <div class="gauge-track">
+          <div class="gauge-fill" style="width:${pctW}%; --c:${s.c}"></div>
+          <div class="gauge-target" style="left:${elapsedFrac*100}%"></div>
+        </div>
+        <div class="gauge-pct" style="--c:${s.c}">${fmtPct(r.pct)}</div>
+      </div>
+      <div class="dyn-cell">
+        <span class="dyn-badge" style="--c:${s.c}; --bgc:${s.bg}">${fmtPct(r.dyn)}</span>
+      </div>
+      ${chevronSVG()}
+    </div>
+    <div class="leaderboard-panel ${isOpen?'open':''}" data-panel="${r.full}">${renderLeaderboard(r)}</div>`;
+  }).join('');
+}
+
+rowsEl.addEventListener('click', e=>{
+  const row = e.target.closest('.row');
+  if (!row || row.classList.contains('no-mgr')) return;
+  const brand = row.dataset.brand;
+  const panel = rowsEl.querySelector(`.leaderboard-panel[data-panel="${CSS.escape(brand)}"]`);
+  const willOpen = !row.classList.contains('open');
+  row.classList.toggle('open', willOpen);
+  panel.classList.toggle('open', willOpen);
+  if (willOpen) openBrands.add(brand); else openBrands.delete(brand);
+});
+
+document.getElementById('tierSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#tierSeg button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  tierFilter = btn.dataset.tier;
+  render();
+});
+document.getElementById('sortSel').addEventListener('change', e=>{
+  sortMode = e.target.value; render();
+});
+
+render();
+</script>
+</body>
+</html>
