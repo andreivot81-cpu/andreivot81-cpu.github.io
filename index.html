@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель — выполнение плана по брендам, 3 кв. 2026</title>
+<title>Панель показателей — ЦЧР Рязань</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
@@ -48,14 +48,11 @@
     display:flex; justify-content:space-between; align-items:flex-end;
     flex-wrap:wrap; gap:14px;
     border-bottom:1px solid var(--line);
-    padding-bottom:18px; margin-bottom:22px;
+    padding-bottom:18px; margin-bottom:18px;
   }
-  .brand-mark{
-    display:flex; align-items:center; gap:10px; margin-bottom:6px;
-  }
+  .brand-mark{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
   .brand-mark .dot{
-    width:9px;height:9px;border-radius:50%;
-    background:var(--amber);
+    width:9px;height:9px;border-radius:50%; background:var(--amber);
     box-shadow:0 0 8px 2px rgba(242,169,59,.55);
   }
   .eyebrow{
@@ -64,54 +61,54 @@
   }
   h1{font-size:23px; margin:2px 0 4px; font-weight:600; letter-spacing:-.01em;}
   .subline{color:var(--ink-dim); font-size:13.5px;}
-  .updated{
-    text-align:right; font-size:11.5px; color:var(--ink-faint);
-    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
-  }
+  .updated{text-align:right; font-size:11.5px; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
   .updated b{color:var(--ink-dim); font-weight:500;}
 
-  /* ---------- KPI strip ---------- */
-  .kpi-row{
-    display:grid; grid-template-columns: 1.35fr 1fr 1fr 1fr 1.15fr;
-    gap:12px; margin-bottom:26px;
+  /* ---------- tabs ---------- */
+  .tabbar{
+    display:flex; gap:4px; margin-bottom:22px; overflow-x:auto;
+    border-bottom:1px solid var(--line); padding-bottom:0;
   }
+  .tabbar button{
+    all:unset; cursor:pointer; padding:10px 16px; font-size:13px; font-weight:600;
+    color:var(--ink-faint); white-space:nowrap; border-bottom:2px solid transparent;
+    font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .tabbar button:hover{color:var(--ink-dim);}
+  .tabbar button.active{color:var(--amber); border-bottom-color:var(--amber);}
+  .tabpanel{display:none;}
+  .tabpanel.active{display:block;}
+  .section-sub{color:var(--ink-dim); font-size:13px; margin:-6px 0 18px;}
+
+  /* ---------- KPI cards ---------- */
+  .kpi-row{display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:14px;}
+  .kpi-row.cols-5{grid-template-columns: repeat(5, 1fr);}
   .kpi{
     background:var(--panel); border:1px solid var(--line);
     border-radius:var(--radius); padding:16px 16px 14px;
     position:relative; overflow:hidden;
   }
-  .kpi::before{
-    content:''; position:absolute; top:0; left:0; right:0; height:2px;
-    background:var(--kc, var(--amber));
-  }
+  .kpi::before{content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--kc, var(--amber));}
   .kpi-label{
     font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
     color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; margin-bottom:10px;
   }
-  .kpi-val{font-size:22px; font-weight:600; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; line-height:1;}
+  .kpi-val{font-size:21px; font-weight:600; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; line-height:1;}
   .kpi-sub{font-size:11.5px; color:var(--ink-dim); margin-top:6px;}
-
-  /* circular gauge kpi */
   .kpi-gauge{display:flex; align-items:center; gap:14px;}
   .kpi-gauge svg{flex:none;}
   .kpi-gauge .gtext{font-size:20px;font-weight:700;font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
 
   /* ---------- controls ---------- */
-  .controls{
-    display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:12px; margin-bottom:14px;
-  }
-  .seg{
-    display:inline-flex; background:var(--panel); border:1px solid var(--line);
-    border-radius:8px; padding:3px; gap:2px;
-  }
+  .controls{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:14px;}
+  .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:3px; gap:2px;}
   .seg button{
     all:unset; cursor:pointer; padding:6px 13px; font-size:12.5px; border-radius:6px;
     color:var(--ink-dim); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
   }
   .seg button.active{background:var(--panel-2); color:var(--ink); font-weight:600;}
   .seg button:hover:not(.active){color:var(--ink);}
-
   select{
     all:unset; background:var(--panel); border:1px solid var(--line);
     border-radius:8px; padding:7px 12px; font-size:12.5px; color:var(--ink);
@@ -124,11 +121,8 @@
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
 
-  /* ---------- rows (breaker cards) ---------- */
-  .board{
-    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-    overflow:hidden;
-  }
+  /* ---------- board / rows (общие для всех вкладок) ---------- */
+  .board{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-bottom:22px;}
   .col-hdr{
     display:grid; grid-template-columns: 22px 1.9fr 1fr 1fr 1fr .8fr;
     gap:14px; padding:10px 18px; font-size:10.5px; letter-spacing:.08em;
@@ -138,13 +132,12 @@
   .col-hdr span:nth-child(n+3){text-align:right;}
   .row{
     display:grid; grid-template-columns: 22px 1.9fr 1fr 1fr 1fr .8fr;
-    gap:14px; align-items:center; padding:13px 18px;
+    gap:14px; align-items:center; padding:13px 34px 13px 18px; position:relative; cursor:pointer;
     border-bottom:1px solid var(--line-soft);
     transition:background .15s ease;
   }
   .row:last-child{border-bottom:none;}
   .row:hover{background:var(--panel-2);}
-  .row{padding:13px 34px 13px 18px; position:relative; cursor:pointer;}
   .row.no-mgr{cursor:default;}
 
   .chev{
@@ -155,37 +148,19 @@
   .row.open .chev{transform:rotate(90deg); color:var(--amber);}
   .row.no-mgr .chev{visibility:hidden;}
 
-  .led{
-    width:10px;height:10px;border-radius:50%; margin:0 auto;
-    background:var(--c); box-shadow:0 0 7px 1px color-mix(in srgb, var(--c) 70%, transparent);
-  }
+  .led{width:10px;height:10px;border-radius:50%; margin:0 auto; background:var(--c); box-shadow:0 0 7px 1px color-mix(in srgb, var(--c) 70%, transparent);}
 
   .name-cell{min-width:0;}
-  .name-cell .tier{
-    font-size:9.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing:.07em;
-    color:var(--ink-faint); text-transform:uppercase;
-  }
-  .name-cell .nm{
-    font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    margin-top:1px;
-  }
+  .name-cell .tier{font-size:9.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing:.07em; color:var(--ink-faint); text-transform:uppercase;}
+  .name-cell .nm{font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
 
   .gauge-cell{min-width:0;}
-  .gauge-track{
-    position:relative; height:8px; border-radius:5px; background:#252B36;
-    overflow:visible; margin-bottom:5px;
-  }
-  .gauge-fill{
-    position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--c);
-  }
-  .gauge-target{
-    position:absolute; top:-3px; bottom:-3px; width:2px; background:#C8CEDA;
-    opacity:.85;
-  }
+  .gauge-track{position:relative; height:8px; border-radius:5px; background:#252B36; overflow:visible; margin-bottom:5px;}
+  .gauge-fill{position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--c);}
+  .gauge-target{position:absolute; top:-3px; bottom:-3px; width:2px; background:#C8CEDA; opacity:.85;}
   .gauge-target::after{
     content:''; position:absolute; top:-3px; left:50%; transform:translateX(-50%);
-    width:0;height:0; border-left:3px solid transparent; border-right:3px solid transparent;
-    border-top:3px solid #C8CEDA;
+    width:0;height:0; border-left:3px solid transparent; border-right:3px solid transparent; border-top:3px solid #C8CEDA;
   }
   .gauge-pct{font-size:12.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-weight:600; color:var(--c);}
 
@@ -207,53 +182,34 @@
     padding:3px 8px; border-radius:5px; background:var(--bgc); color:var(--c);
   }
 
-  /* ---------- турнирная таблица менеджеров (арена) ---------- */
-  .leaderboard-panel{
-    max-height:0; overflow:hidden;
-    transition:max-height .35s ease;
-    border-bottom:1px solid var(--line-soft);
-  }
-  .leaderboard-panel.open{max-height:1400px;}
+  /* ---------- турнирная таблица / вложенные панели ---------- */
+  .leaderboard-panel{max-height:0; overflow:hidden; transition:max-height .35s ease; border-bottom:1px solid var(--line-soft);}
+  .leaderboard-panel.open{max-height:4000px;}
   .leaderboard-inner{
     padding:16px 20px 20px;
-    background:
-      radial-gradient(520px 180px at 50% -60px, rgba(242,169,59,.09), transparent 70%),
-      #14181F;
+    background: radial-gradient(520px 180px at 50% -60px, rgba(242,169,59,.09), transparent 70%), #14181F;
   }
   .lb-title{
-    font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
-    color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint);
+    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
     margin-bottom:10px; display:flex; align-items:center; gap:8px;
   }
   .lb-title::after{content:''; flex:1; height:1px; background:var(--line-soft);}
 
-  .tribute-row{
-    display:flex; align-items:center; gap:12px;
-    padding:8px 10px; border-radius:8px;
-    border:1px solid transparent;
-  }
+  .tribute-row{display:flex; align-items:center; gap:12px; padding:8px 10px; border-radius:8px; border:1px solid transparent;}
   .tribute-row + .tribute-row{margin-top:3px;}
-  .tribute-row.rank-1{
-    background:linear-gradient(90deg, rgba(231,196,101,.10), transparent 70%);
-    border-color:rgba(231,196,101,.25);
-  }
+  .tribute-row.rank-1{background:linear-gradient(90deg, rgba(231,196,101,.10), transparent 70%); border-color:rgba(231,196,101,.25);}
   .tribute-row.rank-2{background:rgba(201,210,220,.05);}
   .tribute-row.rank-3{background:rgba(201,138,85,.06);}
 
-  .tribute-rank{
-    width:20px; flex:none; text-align:center; font-weight:700; font-size:12px;
-    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
-    color:var(--ink-faint);
-  }
+  .tribute-rank{width:20px; flex:none; text-align:center; font-weight:700; font-size:12px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; color:var(--ink-faint);}
   .tribute-rank.gold{color:var(--gold);}
   .tribute-rank.silver{color:var(--silver);}
   .tribute-rank.bronze{color:var(--bronze);}
 
   .tribute-avatar{
-    width:32px; height:32px; border-radius:50%; flex:none;
-    background:var(--panel-2); border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; font-size:16px;
-    overflow:hidden;
+    width:32px; height:32px; border-radius:50%; flex:none; background:var(--panel-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:16px; overflow:hidden;
   }
   .tribute-avatar img{width:100%; height:100%; object-fit:cover;}
   .tribute-avatar.gold{box-shadow:0 0 0 2px var(--gold), 0 0 12px 2px rgba(231,196,101,.4);}
@@ -261,56 +217,167 @@
   .tribute-avatar.bronze{box-shadow:0 0 0 2px var(--bronze);}
 
   .tribute-name{flex:1 1 auto; min-width:0;}
-  .tribute-name .nm{
-    font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    display:flex; align-items:center; gap:6px;
-  }
+  .tribute-name .nm{font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:6px;}
   .tribute-name .fire{font-size:11px;}
   .tribute-name .sec{
     font-size:9.5px; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
     text-transform:uppercase; letter-spacing:.05em; margin-top:1px;
   }
 
-  .tribute-fact{
-    flex:none; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
-    font-size:12.5px; min-width:92px;
-  }
+  .tribute-fact{flex:none; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:12.5px; min-width:92px;}
   .tribute-fact .lbl{display:block; font-size:8.5px; color:var(--ink-faint); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight:400;}
 
   .tribute-plan{display:flex; align-items:center; gap:8px; flex:none;}
   .mini-gauge{position:relative; width:64px; height:6px; border-radius:4px; background:#252B36;}
   .mini-gauge i{position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:var(--c);}
-  .tribute-pct{
-    font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px;
-    font-weight:600; color:var(--c); min-width:48px; text-align:right;
-  }
+  .tribute-pct{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px; font-weight:600; color:var(--c); min-width:48px; text-align:right;}
   .tribute-dyn{
     font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:10.5px; font-weight:700;
     padding:2px 6px; border-radius:4px; background:var(--bgc); color:var(--c); min-width:44px; text-align:center;
   }
-  .tribute-noplan{
-    flex:none; font-size:10.5px; color:var(--ink-faint); font-style:italic; min-width:90px; text-align:right;
-  }
+  .tribute-noplan{flex:none; font-size:10.5px; color:var(--ink-faint); font-style:italic; min-width:90px; text-align:right;}
 
-  @media (max-width:760px){
-    .tribute-row{flex-wrap:wrap;}
-    .tribute-plan{width:100%; padding-left:44px; margin-top:2px;}
-  }
-
-  footer{
-    margin-top:20px; font-size:11.5px; color:var(--ink-faint); line-height:1.6;
-    border-top:1px solid var(--line); padding-top:14px;
-  }
+  footer{margin-top:20px; font-size:11.5px; color:var(--ink-faint); line-height:1.6; border-top:1px solid var(--line); padding-top:14px;}
   footer b{color:var(--ink-dim);}
 
   @media (max-width: 760px){
-    .kpi-row{grid-template-columns:1fr 1fr;}
+    .kpi-row, .kpi-row.cols-5{grid-template-columns:1fr 1fr;}
     .col-hdr{display:none;}
     .row{grid-template-columns: 16px 1fr; row-gap:8px;}
     .row .num-cell, .row .dyn-cell, .row .deficit-cell{grid-column:2; text-align:left;}
     .row .gauge-cell{grid-column:2;}
     .num-cell .num-line{justify-content:flex-start;}
     .deficit-value{justify-content:flex-start;}
+    .tribute-row{flex-wrap:wrap;}
+    .tribute-plan{width:100%; padding-left:44px; margin-top:2px;}
+  }
+
+  /* =================================================================
+     ВКЛАДКА "МЕНЕДЖЕРЫ": карточки секторов + расширенные строки менеджера
+     ================================================================= */
+  .mrow{
+    display:flex; align-items:center; gap:16px; padding:14px 34px 14px 18px;
+    position:relative; cursor:pointer; border-bottom:1px solid var(--line-soft);
+    flex-wrap:wrap;
+  }
+  .mrow:last-child{border-bottom:none;}
+  .mrow:hover{background:var(--panel-2);}
+  .mrow .chev{position:absolute; right:12px; top:50%; margin-top:-8px;}
+  .mrow.open .chev{transform:rotate(90deg); color:var(--amber);}
+  .mrow .mname{min-width:150px; flex:none;}
+  .mrow .mname .tier{font-size:9.5px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing:.07em; color:var(--ink-faint); text-transform:uppercase;}
+  .mrow .mname .nm{font-size:14px; font-weight:600; margin-top:1px;}
+
+  .metric-group{flex:1 1 190px; min-width:170px;}
+  .metric-group .mg-label{font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; margin-bottom:4px;}
+  .metric-group .mg-fact{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:13.5px; font-weight:600; margin-bottom:5px;}
+  .metric-group .mg-fact .mg-plan{color:var(--ink-faint); font-weight:400; font-size:11px; margin-left:6px;}
+  .metric-group .mg-bottom{display:flex; align-items:center; gap:8px;}
+  .metric-group .mini-gauge{flex:1 1 auto; max-width:110px;}
+  .metric-group .mg-pct{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:11.5px; font-weight:600; color:var(--c); min-width:44px;}
+
+  .mrow-dyn{flex:none; text-align:center; min-width:76px;}
+  .mrow-dyn .lbl{font-size:9px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px;}
+  .mrow-markup{flex:none; text-align:center; min-width:70px; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
+  .mrow-markup .lbl{font-size:9px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;}
+  .mrow-markup .val{font-size:13px; font-weight:600;}
+
+  .mpanel{max-height:0; overflow:hidden; transition:max-height .35s ease;}
+  .mpanel.open{max-height:6000px;}
+  .mpanel-inner{padding:14px 18px 18px; background:#14181F;}
+  .mtribute{display:flex; align-items:center; gap:14px; padding:10px 12px; border-radius:8px; flex-wrap:wrap;}
+  .mtribute + .mtribute{margin-top:3px; border-top:1px solid var(--line-soft);}
+  .mtribute.rank-1{background:linear-gradient(90deg, rgba(231,196,101,.08), transparent 70%);}
+
+  @media (max-width:900px){
+    .mrow{gap:10px;}
+    .metric-group{flex:1 1 100%;}
+    .mrow-dyn, .mrow-markup{text-align:left;}
+  }
+
+  /* ---------- неликвиды: строки товара + вложенная деталь ---------- */
+  .neliq-item{
+    display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:7px;
+    cursor:pointer; font-size:12.5px;
+  }
+  .neliq-item:hover{background:var(--panel-2);}
+  .neliq-item .ni-code{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; color:var(--ink-faint); flex:none; width:88px; display:inline-flex; align-items:center; gap:5px;}
+  .ni-copy{width:13px; height:13px; flex:none; color:var(--ink-faint); cursor:pointer; transition:color .15s ease;}
+  .ni-copy:hover{color:var(--amber);}
+  .ni-copy.copied{color:var(--green);}
+  .neliq-item .ni-name{flex:1 1 auto; min-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .neliq-item .ni-qty{flex:none; width:70px; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; color:var(--ink-dim);}
+  .neliq-item .ni-price{flex:none; width:90px; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; color:var(--ink-dim);}
+  .neliq-item .ni-cost{flex:none; width:100px; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-weight:700; color:var(--red);}
+  .neliq-item .ni-wh{flex:none; width:120px; color:var(--ink-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .neliq-item .ni-date{flex:none; width:80px; text-align:right; color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;}
+  .neliq-item .ni-chev{flex:none; width:14px; height:14px; color:var(--ink-faint); transition:transform .2s ease;}
+  .neliq-item.open .ni-chev{transform:rotate(90deg); color:var(--amber);}
+  .neliq-detail{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .neliq-detail.open{max-height:200px;}
+  .neliq-detail-inner{padding:8px 10px 12px 92px; font-size:11.5px; color:var(--ink-dim); display:flex; gap:24px;}
+  .neliq-detail-inner b{color:var(--ink);}
+  .neliq-hdr{
+    display:flex; gap:12px; padding:0 10px 6px; font-size:9.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  }
+  .neliq-hdr span:nth-child(1){width:70px;}
+  .neliq-hdr span:nth-child(2){flex:1 1 auto; min-width:160px;}
+  .neliq-hdr span:nth-child(3){width:70px; text-align:right;}
+  .neliq-hdr span:nth-child(4){width:90px; text-align:right;}
+  .neliq-hdr span:nth-child(5){width:100px; text-align:right;}
+  .neliq-hdr span:nth-child(6){width:120px;}
+  .neliq-hdr span:nth-child(7){width:80px; text-align:right;}
+  .zero-badge{
+    display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
+    color:var(--green); background:var(--green-dim); padding:3px 9px; border-radius:5px;
+  }
+  .mrow.highlight{background:var(--panel-2); box-shadow:inset 3px 0 0 var(--amber);}
+
+  /* ---------- специалисты ---------- */
+  .selfentry-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:10px; margin-bottom:22px;}
+  .selfentry-card{background:var(--panel); border:1px solid var(--line); border-radius:9px; padding:12px 14px;}
+  .selfentry-card .se-name{font-size:13px; font-weight:600; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .selfentry-card .se-bar{position:relative; height:6px; border-radius:4px; background:#252B36; margin-bottom:6px;}
+  .selfentry-card .se-bar i{position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:var(--c);}
+  .selfentry-card .se-foot{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-dim);}
+  .selfentry-card .se-pct{font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-weight:700; color:var(--c);}
+
+  .spec-row{display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid var(--line-soft);}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-row.rank-1{background:linear-gradient(90deg, rgba(231,196,101,.09), transparent 70%);}
+  .spec-rank{width:24px; flex:none; text-align:center; font-weight:700; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; color:var(--ink-faint);}
+  .spec-rank.gold{color:var(--gold);} .spec-rank.silver{color:var(--silver);} .spec-rank.bronze{color:var(--bronze);}
+  .spec-avatar{width:34px; height:34px; border-radius:50%; flex:none; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:17px;}
+  .spec-avatar.gold{box-shadow:0 0 0 2px var(--gold), 0 0 12px 2px rgba(231,196,101,.4);}
+  .spec-name{flex:1 1 180px; min-width:140px; font-size:13.5px; font-weight:600;}
+  .spec-bar-wrap{flex:2 1 220px; min-width:160px;}
+  .spec-bar{position:relative; height:8px; border-radius:5px; background:#252B36;}
+  .spec-bar i{position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--c);}
+  .spec-nums{flex:none; text-align:right; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-size:12.5px; min-width:130px;}
+  .spec-nums .lbl{display:block; font-size:9px; color:var(--ink-faint); font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;}
+  .spec-pctbadge{flex:none; min-width:60px; text-align:center; font-family:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace; font-weight:700; font-size:12px; padding:4px 8px; border-radius:5px; background:var(--bgc); color:var(--c);}
+
+  /* мобильные переопределения (должны идти последними, чтобы точно перебить блочные правила выше) */
+  @media (max-width:760px){
+    .neliq-hdr{display:none;}
+    .neliq-item{flex-wrap:wrap; row-gap:5px; padding:12px 10px;}
+    .neliq-item .ni-code{order:1; width:auto; color:var(--ink-faint);}
+    .neliq-item .ni-name{order:2; flex:1 1 100%; white-space:normal; min-width:100%;}
+    .neliq-item .ni-chev{order:3; margin-left:auto;}
+    .neliq-item .ni-qty{order:4; width:auto; text-align:left;}
+    .neliq-item .ni-price{order:5; width:auto; text-align:left;}
+    .neliq-item .ni-cost{order:6; width:auto; text-align:left; margin-left:auto;}
+    .neliq-item .ni-wh{order:7; width:auto; text-align:left; overflow:visible;}
+    .neliq-item .ni-date{order:8; width:auto; text-align:left; margin-left:auto;}
+    .neliq-item .ni-qty::before{content:'Кол-во: '; color:var(--ink-faint);}
+    .neliq-item .ni-price::before{content:'Цена: '; color:var(--ink-faint);}
+    .neliq-item .ni-wh::before{content:'Склад: '; color:var(--ink-faint);}
+    .neliq-detail-inner{padding-left:14px; flex-wrap:wrap; gap:10px;}
+
+    .spec-row{flex-wrap:wrap;}
+    .spec-bar-wrap{flex:1 1 100%; order:3;}
+    .spec-nums{margin-left:48px;}
   }
 </style>
 </head>
@@ -320,81 +387,117 @@
   <header>
     <div>
       <div class="brand-mark"><span class="dot"></span><span class="eyebrow">ЦЧР Рязань · Панель контроля</span></div>
-      <h1>Выполнение плана продаж по брендам</h1>
-      <div class="subline">3 квартал 2026 · период 01.07.2026 – 30.09.2026</div>
+      <h1 id="pageTitle">Показатели менеджеров</h1>
+      <div class="subline" id="pageSub">—</div>
     </div>
     <div class="updated">СНИМОК ДАННЫХ<br><b id="snapTime">—</b></div>
   </header>
 
-  <div class="kpi-row" id="kpiRow"></div>
+  <div class="tabbar" id="tabbar">
+    <button data-tab="managers" class="active">Менеджеры</button>
+    <button data-tab="brands">ТОП-бренды</button>
+    <button data-tab="akb">АКБ</button>
+    <button data-tab="neliq">Неликвиды</button>
+    <button data-tab="specialists">Специалисты</button>
+  </div>
 
-  <div class="controls">
-    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <div class="seg" id="tierSeg">
-        <button data-tier="all" class="active">Все</button>
-        <button data-tier="ТОП">ТОП</button>
-        <button data-tier="Премиум">Премиум</button>
+  <!-- ===================== ВКЛАДКА 1: МЕНЕДЖЕРЫ ===================== -->
+  <div id="tab-managers" class="tabpanel active">
+    <div class="kpi-row" id="mgrKpiShip"></div>
+    <div class="kpi-row cols-5" id="mgrKpiVd" style="margin-bottom:22px;"></div>
+    <div class="board" id="sectorBoard"></div>
+  </div>
+
+  <!-- ===================== ВКЛАДКА 2: ТОП-БРЕНДЫ ===================== -->
+  <div id="tab-brands" class="tabpanel">
+    <div class="kpi-row cols-5" id="kpiRow"></div>
+    <div class="controls">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <div class="seg" id="tierSeg">
+          <button data-tier="all" class="active">Все</button>
+          <button data-tier="ТОП">ТОП</button>
+          <button data-tier="Премиум">Премиум</button>
+        </div>
+        <select id="sortSel">
+          <option value="pct_desc">Сортировка: % выполнения ↓</option>
+          <option value="pct_asc">% выполнения ↑</option>
+          <option value="deficit_desc">Дефицит ↓</option>
+          <option value="plan_desc">План ↓</option>
+          <option value="dyn_asc">Отставание от графика</option>
+          <option value="az">По алфавиту</option>
+        </select>
       </div>
-      <select id="sortSel">
-        <option value="pct_desc">Сортировка: % выполнения ↓</option>
-        <option value="pct_asc">% выполнения ↑</option>
-        <option value="deficit_desc">Дефицит ↓</option>
-        <option value="plan_desc">План ↓</option>
-        <option value="dyn_asc">Отставание от графика</option>
+      <div class="count" id="cnt"></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--green)"></i> опережает график (темп ≥ 100%)</span>
+      <span><i style="background:var(--amber)"></i> близко к графику (70–100%)</span>
+      <span><i style="background:var(--red)"></i> критично отстаёт (&lt; 70%)</span>
+      <span style="color:var(--ink-faint)">▲ метка на шкале — доля прошедшего времени квартала (~56.7%)</span>
+    </div>
+    <div class="board">
+      <div class="col-hdr">
+        <span></span><span>Бренд</span><span>План / Факт</span><span>Дефицит</span><span>Выполнение</span><span>Темп</span>
+      </div>
+      <div id="rows"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ВКЛАДКА 3: АКБ ===================== -->
+  <div id="tab-akb" class="tabpanel">
+    <div class="kpi-row" id="akbKpi" style="margin-bottom:22px;"></div>
+    <div class="controls">
+      <div></div>
+      <select id="akbSortSel">
+        <option value="pdz_desc">Сортировка: ПДЗ &gt;0 ↓</option>
+        <option value="markup_desc">Наценка ↓</option>
+        <option value="clients_desc">Кол-во клиентов ↓</option>
+        <option value="articles_desc">Кол-во артикулов ↓</option>
         <option value="az">По алфавиту</option>
       </select>
     </div>
-    <div class="count" id="cnt"></div>
+    <div class="board" id="akbBoard"></div>
   </div>
 
-  <div class="legend">
-    <span><i style="background:var(--green)"></i> опережает график (темп ≥ 100%)</span>
-    <span><i style="background:var(--amber)"></i> близко к графику (70–100%)</span>
-    <span><i style="background:var(--red)"></i> критично отстаёт (&lt; 70%)</span>
-    <span style="color:var(--ink-faint)">▲ метка на шкале — доля прошедшего времени квартала (~56.7%)</span>
+  <!-- ===================== ВКЛАДКА 4: НЕЛИКВИДЫ ===================== -->
+  <div id="tab-neliq" class="tabpanel">
+    <div class="kpi-row" id="neliqKpi" style="grid-template-columns:1fr; margin-bottom:22px;"></div>
+    <div class="section-sub" id="neliqRecentTitle"></div>
+    <div class="board" id="neliqRecentBoard" style="margin-bottom:22px;"></div>
+    <div class="board" id="neliqBoard"></div>
   </div>
 
-  <div class="board">
-    <div class="col-hdr">
-      <span></span><span>Бренд</span><span>План / Факт</span><span>Дефицит</span><span>Выполнение</span><span>Темп</span>
-    </div>
-    <div id="rows"></div>
+  <!-- ===================== ВКЛАДКА 5: СПЕЦИАЛИСТЫ ===================== -->
+  <div id="tab-specialists" class="tabpanel">
+    <div class="section-sub">% строк, набитых менеджером самостоятельно — чем меньше, тем лучше (больше делегировано специалистам)</div>
+    <div class="selfentry-grid" id="selfEntryGrid"></div>
+    <div class="section-sub">Рейтинг специалистов по количеству набитых строк</div>
+    <div class="board" id="specBoard"></div>
   </div>
 
-  <footer>
-    <b>Методика:</b> «Темп» = % выполнения ÷ доля прошедшего времени квартала (формула источника, лист «Бренды», столбец «Динамика»).
-    100% значит бренд идёт ровно по графику равномерного выполнения плана; выше — опережение, ниже — отставание.
-    В турнирной таблице показаны только действующие сотрудники — часть факта бренда может приходиться на уволенных менеджеров, поэтому сумма по списку может быть меньше факта бренда.
-    Данные — снимок на момент выгрузки исходного файла, не обновляются автоматически.
-    Источник: <b>ТулРЦП_Рязань_BRAND_PLAN_3_кв_2026.xlsx</b>, листы «Бренды» и «Факт по менеджерам».
-  </footer>
+  <footer id="pageFooter"></footer>
 
 </div>
 
 <script>
-const DATA = {"rows": [{"full": "ТОП_ЭРА", "tier": "ТОП", "brand": "ЭРА", "plan": 3813763.0, "fact": 3165407.64, "pct": 0.83, "deficit": 648355.36, "dyn": 1.3361, "managers": [{"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 988763.28}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 907900.64}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 442826.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 226837.73}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 194454.46}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 126066.14}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 96566.88}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 47712.88}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 47674.8}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 39680.08}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 32077.42}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 12834.33}]}, {"full": "ТОП_Русский Свет", "tier": "ТОП", "brand": "Русский Свет", "plan": 3165801.0, "fact": 2542102.53, "pct": 0.803, "deficit": 623698.47, "dyn": 1.2926, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 733902.78, "plan": 334367.3, "pct": 2.1949, "dyn": 3.5333}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 642252.83, "plan": 323898.0, "pct": 1.9829, "dyn": 3.192}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 528662.4, "plan": 334366.3, "pct": 1.5811, "dyn": 2.5452}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 195862.01, "plan": 323898.0, "pct": 0.6047, "dyn": 0.9734}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 121890.63, "plan": 92598.0, "pct": 1.3163, "dyn": 2.119}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 102883.41, "plan": 61732.0, "pct": 1.6666, "dyn": 2.6828}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 90099.45, "plan": 323898.0, "pct": 0.2782, "dyn": 0.4478}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 65258.97, "plan": 323898.0, "pct": 0.2015, "dyn": 0.3243}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 45638.97, "plan": 227050.8, "pct": 0.201, "dyn": 0.3236}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 15651.08, "plan": 334365.3, "pct": 0.0468, "dyn": 0.0753}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0, "plan": 334368.3, "pct": 0.0, "dyn": 0.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 0.0, "plan": 151367.2, "pct": 0.0, "dyn": 0.0}]}, {"full": "ТОП_TOKOV ELECTRIC", "tier": "ТОП", "brand": "TOKOV ELECTRIC", "plan": 9608554.0, "fact": 7239265.41, "pct": 0.7534, "deficit": 2369288.59, "dyn": 1.2128, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 2759861.83, "plan": 900889.43, "pct": 3.0635, "dyn": 4.9315}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 838261.67, "plan": 902145.0, "pct": 0.9292, "dyn": 1.4958}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 833560.53, "plan": 902143.0, "pct": 0.924, "dyn": 1.4874}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 639566.79, "plan": 902146.0, "pct": 0.7089, "dyn": 1.1412}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 495943.67, "plan": 900890.43, "pct": 0.5505, "dyn": 0.8862}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 431419.18, "plan": 783865.5, "pct": 0.5504, "dyn": 0.886}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 364918.7, "plan": 783865.5, "pct": 0.4655, "dyn": 0.7494}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 293453.57, "plan": 900888.43, "pct": 0.3257, "dyn": 0.5244}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 214090.07, "plan": 627368.8, "pct": 0.3413, "dyn": 0.5493}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 163154.92, "plan": 902144.0, "pct": 0.1809, "dyn": 0.2911}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 158966.56, "plan": 156842.2, "pct": 1.0135, "dyn": 1.6316}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 45169.76, "plan": 900891.43, "pct": 0.0501, "dyn": 0.0807}]}, {"full": "Премиум_Opticell", "tier": "Премиум", "brand": "Opticell", "plan": 624026.0, "fact": 451708.8, "pct": 0.7239, "deficit": 172317.2, "dyn": 1.1652, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 422569.77}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 16753.4}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 7363.68}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2945.47}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1578.78}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 497.7}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "ТОП_Systeme Electric", "tier": "ТОП", "brand": "Systeme Electric", "plan": 11884950.0, "fact": 8259119.93, "pct": 0.6949, "deficit": 3625830.07, "dyn": 1.1187, "managers": [{"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3219964.82}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 2145556.6}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1244288.39}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 743729.21}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 428872.27}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 138039.16}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 131871.37}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 66019.33}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 54953.71}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 50722.23}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 30800.51}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 4302.33}]}, {"full": "Премиум_Universal", "tier": "Премиум", "brand": "Universal", "plan": 4228686.0, "fact": 2721105.12, "pct": 0.6435, "deficit": 1507580.88, "dyn": 1.0359, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 1677202.11}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 819723.1}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 140509.4}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 26616.4}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 23134.88}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 17039.01}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 12576.98}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2654.18}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 600.09}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 549.07}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 499.9}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}]}, {"full": "ТОП_JAZZWAY", "tier": "ТОП", "brand": "JAZZWAY", "plan": 4006459.0, "fact": 2487270.84, "pct": 0.6208, "deficit": 1519188.16, "dyn": 0.9994, "managers": [{"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 875495.38}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 434069.04}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 370061.02}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 188947.7}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 175738.71}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 108742.08}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 105723.9}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 64147.77}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 55341.07}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 55322.9}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 39506.47}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 14174.8}]}, {"full": "ТОП_EKF", "tier": "ТОП", "brand": "EKF", "plan": 25813972.0, "fact": 15460383.11, "pct": 0.5989, "deficit": 10353588.89, "dyn": 0.9641, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 6091312.5, "plan": 6415776.21, "pct": 0.9494, "dyn": 1.5283}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1712146.3, "plan": 1912932.0, "pct": 0.895, "dyn": 1.4408}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 1666385.47, "plan": 1912932.0, "pct": 0.8711, "dyn": 1.4023}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1193527.7, "plan": 3666157.83, "pct": 0.3256, "dyn": 0.5241}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1036079.95, "plan": 1509992.4, "pct": 0.6861, "dyn": 1.1045}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 758808.25, "plan": 1594110.0, "pct": 0.476, "dyn": 0.7663}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 707608.5, "plan": 647139.6, "pct": 1.0934, "dyn": 1.7602}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 703138.58, "plan": 2026290.6, "pct": 0.347, "dyn": 0.5586}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 699497.13, "plan": 4528697.29, "pct": 0.1545, "dyn": 0.2486}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 397949.71, "plan": 956467.0, "pct": 0.4161, "dyn": 0.6698}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 312853.67, "plan": 3666157.84, "pct": 0.0853, "dyn": 0.1374}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 181144.97, "plan": 225143.4, "pct": 0.8046, "dyn": 1.2952}]}, {"full": "ТОП_СИСТЕМА КМ", "tier": "ТОП", "brand": "СИСТЕМА КМ", "plan": 3553357.0, "fact": 1911889.32, "pct": 0.5381, "deficit": 1641467.68, "dyn": 0.8661, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1391872.46}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 236963.77}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 103872.65}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 85224.58}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 42515.52}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 20412.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 19118.43}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5873.2}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 3826.16}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2210.55}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_DKC", "tier": "ТОП", "brand": "DKC", "plan": 45044387.0, "fact": 21811138.32, "pct": 0.4842, "deficit": 23233248.68, "dyn": 0.7795, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 5022026.36, "plan": 3182450.12, "pct": 1.578, "dyn": 2.5403}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 3747579.5, "plan": 4744963.0, "pct": 0.7898, "dyn": 1.2714}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2592164.29, "plan": 6642947.62, "pct": 0.3902, "dyn": 0.6281}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 2501814.12, "plan": 4744963.0, "pct": 0.5273, "dyn": 0.8488}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1863876.86, "plan": 4773675.17, "pct": 0.3904, "dyn": 0.6285}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1319231.89, "plan": 1700000.0, "pct": 0.776, "dyn": 1.2492}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1280081.21, "plan": 2846977.55, "pct": 0.4496, "dyn": 0.7238}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 1260476.11, "plan": 6630648.4, "pct": 0.1901, "dyn": 0.306}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 844610.86, "plan": 3182450.12, "pct": 0.2654, "dyn": 0.4272}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 840240.57, "plan": 4773675.17, "pct": 0.176, "dyn": 0.2833}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 409213.66, "plan": 1004512.0, "pct": 0.4074, "dyn": 0.6558}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 127274.92, "plan": 736737.6, "pct": 0.1728, "dyn": 0.2781}]}, {"full": "ТОП_ГК IEK", "tier": "ТОП", "brand": "ГК IEK", "plan": 69218740.0, "fact": 30967453.94, "pct": 0.4474, "deficit": 38251286.06, "dyn": 0.7202, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 6076419.46, "plan": 7020023.0, "pct": 0.8656, "dyn": 1.3934}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 5724504.65, "plan": 7929810.8, "pct": 0.7219, "dyn": 1.1621}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3857607.79, "plan": 9394716.2, "pct": 0.4106, "dyn": 0.661}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 2619963.9, "plan": 6358506.2, "pct": 0.412, "dyn": 0.6633}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2369545.16, "plan": 4239004.0, "pct": 0.559, "dyn": 0.8998}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2175262.43, "plan": 9315086.4, "pct": 0.2335, "dyn": 0.3759}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2096659.36, "plan": 5014302.0, "pct": 0.4181, "dyn": 0.6731}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1953495.47, "plan": 3179253.1, "pct": 0.6145, "dyn": 0.9891}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 1692104.14, "plan": 7418257.24, "pct": 0.2281, "dyn": 0.3672}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 936425.41, "plan": 4011442.0, "pct": 0.2334, "dyn": 0.3758}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 840582.99, "plan": 4011443.0, "pct": 0.2095, "dyn": 0.3373}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 612277.75, "plan": 1035009.6, "pct": 0.5916, "dyn": 0.9523}]}, {"full": "Премиум_Rexant", "tier": "Премиум", "brand": "Rexant", "plan": 3537877.0, "fact": 1524577.28, "pct": 0.4309, "deficit": 2013299.72, "dyn": 0.6937, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 255961.27}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 221571.31}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 215217.14}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 187315.07}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 152332.82}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 145512.1}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 140643.59}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 74242.25}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 47867.1}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 40552.01}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 25755.42}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 17062.47}]}, {"full": "Премиум_IN HOME", "tier": "Премиум", "brand": "IN HOME", "plan": 4395969.0, "fact": 1714799.41, "pct": 0.3901, "deficit": 2681169.59, "dyn": 0.6279, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 549949.64}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 397084.35}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 368644.76}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 144876.56}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 109391.52}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 35491.63}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 34584.19}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 25492.57}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 24759.18}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 10113.01}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 7689.81}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4623.79}]}, {"full": "Премиум_Arlight", "tier": "Премиум", "brand": "Arlight", "plan": 3691429.0, "fact": 1395306.22, "pct": 0.378, "deficit": 2296122.78, "dyn": 0.6085, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 774163.67}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 410083.86}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 110704.37}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 44594.28}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 41790.27}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 6827.91}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 4850.09}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 2291.77}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}]}, {"full": "ТОП_КЭАЗ", "tier": "ТОП", "brand": "КЭАЗ", "plan": 5409444.0, "fact": 2019470.94, "pct": 0.3733, "deficit": 3389973.06, "dyn": 0.601, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 820182.12}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 305757.54}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 192392.7}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 157347.11}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 152925.33}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 101025.24}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 84722.66}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 69509.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 64516.59}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 42843.68}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 16959.29}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 11289.68}]}, {"full": "ТОП_DEKraft", "tier": "ТОП", "brand": "DEKraft", "plan": 8009681.0, "fact": 2928276.51, "pct": 0.3656, "deficit": 5081404.49, "dyn": 0.5885, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1575586.91}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 299858.7}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 281480.07}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 232359.11}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 219450.07}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 77396.73}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 72858.75}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 52839.4}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 50746.6}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 44709.03}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 13961.17}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 7029.97}]}, {"full": "ТОП_NAVIGATOR", "tier": "ТОП", "brand": "NAVIGATOR", "plan": 5877739.0, "fact": 2078985.97, "pct": 0.3537, "deficit": 3798753.03, "dyn": 0.5694, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 751775.94}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 536415.71}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 269428.96}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 169147.8}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 105700.48}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 88569.31}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 60198.14}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 36466.85}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 33536.53}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 26838.5}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 26207.05}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 8970.7}]}, {"full": "ТОП_VARTON", "tier": "ТОП", "brand": "VARTON", "plan": 10311794.0, "fact": 3550324.77, "pct": 0.3443, "deficit": 6761469.23, "dyn": 0.5542, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 3503841.69}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 19824.61}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 15466.31}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 5051.17}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4113.11}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 2027.88}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_CHINT", "tier": "ТОП", "brand": "CHINT", "plan": 12333252.0, "fact": 3236047.96, "pct": 0.2624, "deficit": 9097204.04, "dyn": 0.4224, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1467415.35}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 392534.59}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 383097.29}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 305463.36}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 278804.12}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 179933.25}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 105748.57}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 91572.15}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 14642.88}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 8766.11}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 8018.34}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 51.95}]}, {"full": "Премиум_SUPR", "tier": "Премиум", "brand": "SUPR", "plan": 577013.0, "fact": 110471.12, "pct": 0.1915, "deficit": 466541.88, "dyn": 0.3082, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 35090.74}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 34150.3}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 15604.95}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 13311.76}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 5010.54}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2740.12}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 1607.05}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 1548.91}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1406.75}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Энергомера", "tier": "Премиум", "brand": "Энергомера", "plan": 9382191.0, "fact": 1664257.35, "pct": 0.1774, "deficit": 7717933.65, "dyn": 0.2855, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1340675.37}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 194399.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 47396.55}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 23189.97}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 17306.79}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 12744.01}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 10392.04}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 8910.02}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4920.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2853.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 1470.6}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Ledvance", "tier": "Премиум", "brand": "Ledvance", "plan": 1745668.0, "fact": 273772.2, "pct": 0.1568, "deficit": 1471895.8, "dyn": 0.2525, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 106038.3}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 55412.3}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 55207.9}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 39332.8}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 8332.75}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5442.37}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 2973.46}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1032.32}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "ТОП_LED-effect", "tier": "ТОП", "brand": "LED-effect", "plan": 10943130.0, "fact": 252419.77, "pct": 0.0231, "deficit": 10690710.23, "dyn": 0.0371, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 252419.77}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}], "totals": {"plan": 257177882.0, "fact": 117765554.46, "pct": 0.4579147846781007, "deficit": 139412327.54000002}};
+const DATA = {"brands": {"rows": [{"full": "ТОП_ЭРА", "tier": "ТОП", "brand": "ЭРА", "plan": 3813763.0, "fact": 3899986.31, "pct": 1.0226, "deficit": -86223.31, "dyn": 1.436, "managers": [{"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 1022251.78}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 927022.8}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 565904.84}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 440954.75}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 417276.87}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 113173.03}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 100824.15}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 100737.17}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 71682.18}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 64332.59}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 58530.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 15283.15}]}, {"full": "ТОП_Русский Свет", "tier": "ТОП", "brand": "Русский Свет", "plan": 3165801.0, "fact": 2705518.4, "pct": 0.8546, "deficit": 460282.6, "dyn": 1.2001, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 734336.17, "plan": 334367.3, "pct": 2.1962, "dyn": 3.084}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 642252.83, "plan": 323898.0, "pct": 1.9829, "dyn": 2.7845}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 542509.79, "plan": 334366.3, "pct": 1.6225, "dyn": 2.2784}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 327765.63, "plan": 323898.0, "pct": 1.0119, "dyn": 1.421}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 122532.11, "plan": 92598.0, "pct": 1.3233, "dyn": 1.8582}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 102883.41, "plan": 61732.0, "pct": 1.6666, "dyn": 2.3404}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 90099.45, "plan": 323898.0, "pct": 0.2782, "dyn": 0.3906}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 65258.97, "plan": 323898.0, "pct": 0.2015, "dyn": 0.2829}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 45638.97, "plan": 227050.8, "pct": 0.201, "dyn": 0.2823}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 16589.99, "plan": 151367.2, "pct": 0.1096, "dyn": 0.1539}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 15651.08, "plan": 334365.3, "pct": 0.0468, "dyn": 0.0657}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0, "plan": 334368.3, "pct": 0.0, "dyn": 0.0}]}, {"full": "ТОП_TOKOV ELECTRIC", "tier": "ТОП", "brand": "TOKOV ELECTRIC", "plan": 9608554.0, "fact": 8159712.58, "pct": 0.8492, "deficit": 1448841.42, "dyn": 1.1925, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 3035390.82, "plan": 900889.43, "pct": 3.3693, "dyn": 4.7314}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 901147.8, "plan": 902145.0, "pct": 0.9989, "dyn": 1.4027}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 885000.03, "plan": 902143.0, "pct": 0.981, "dyn": 1.3776}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 682912.38, "plan": 902146.0, "pct": 0.757, "dyn": 1.063}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 572225.58, "plan": 783865.5, "pct": 0.73, "dyn": 1.0251}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 535852.51, "plan": 900890.43, "pct": 0.5948, "dyn": 0.8353}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 487115.28, "plan": 783865.5, "pct": 0.6214, "dyn": 0.8726}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 354918.14, "plan": 900888.43, "pct": 0.394, "dyn": 0.5532}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 242613.23, "plan": 627368.8, "pct": 0.3867, "dyn": 0.543}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 241096.89, "plan": 156842.2, "pct": 1.5372, "dyn": 2.1586}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 174327.07, "plan": 902144.0, "pct": 0.1932, "dyn": 0.2714}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 46214.69, "plan": 900891.43, "pct": 0.0513, "dyn": 0.072}]}, {"full": "Премиум_Opticell", "tier": "Премиум", "brand": "Opticell", "plan": 624026.0, "fact": 484263.62, "pct": 0.776, "deficit": 139762.38, "dyn": 1.0897, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 455124.59}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 16753.4}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 7363.68}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2945.47}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1578.78}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 497.7}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "ТОП_Systeme Electric", "tier": "ТОП", "brand": "Systeme Electric", "plan": 11884950.0, "fact": 9338919.37, "pct": 0.7858, "deficit": 2546030.63, "dyn": 1.1034, "managers": [{"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3872836.8}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 2287510.58}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1250114.68}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 926633.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 435710.69}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 179641.19}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 177505.74}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 66019.33}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 54953.71}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 50722.23}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 31007.51}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 6263.91}]}, {"full": "Премиум_Universal", "tier": "Премиум", "brand": "Universal", "plan": 4228686.0, "fact": 2878900.87, "pct": 0.6808, "deficit": 1349785.13, "dyn": 0.956, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 1721774.05}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 903958.37}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 169497.94}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 26616.4}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 23134.88}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 17039.01}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 12576.98}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2654.18}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 600.09}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 549.07}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 499.9}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}]}, {"full": "ТОП_JAZZWAY", "tier": "ТОП", "brand": "JAZZWAY", "plan": 4006459.0, "fact": 3052240.62, "pct": 0.7618, "deficit": 954218.38, "dyn": 1.0698, "managers": [{"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1126368.13}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 457174.44}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 442803.72}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 192233.39}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 177272.79}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 169625.78}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 151084.11}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 111912.42}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 73595.4}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 55341.07}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 55322.9}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 39506.47}]}, {"full": "ТОП_EKF", "tier": "ТОП", "brand": "EKF", "plan": 25813972.0, "fact": 17983895.48, "pct": 0.6967, "deficit": 7830076.52, "dyn": 0.9783, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 7249468.23, "plan": 6415776.21, "pct": 1.1299, "dyn": 1.5867}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 1803220.12, "plan": 1912932.0, "pct": 0.9426, "dyn": 1.3237}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1743771.94, "plan": 1912932.0, "pct": 0.9116, "dyn": 1.2801}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1532877.17, "plan": 1509992.4, "pct": 1.0152, "dyn": 1.4255}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1238162.92, "plan": 3666157.83, "pct": 0.3377, "dyn": 0.4743}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 982344.85, "plan": 4528697.29, "pct": 0.2169, "dyn": 0.3046}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 836848.52, "plan": 2026290.6, "pct": 0.413, "dyn": 0.58}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 798991.69, "plan": 647139.6, "pct": 1.2347, "dyn": 1.7338}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 773183.4, "plan": 1594110.0, "pct": 0.485, "dyn": 0.6811}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 486046.08, "plan": 956467.0, "pct": 0.5082, "dyn": 0.7136}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 318125.58, "plan": 3666157.84, "pct": 0.0868, "dyn": 0.1219}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 220924.6, "plan": 225143.4, "pct": 0.9813, "dyn": 1.3779}]}, {"full": "ТОП_СИСТЕМА КМ", "tier": "ТОП", "brand": "СИСТЕМА КМ", "plan": 3553357.0, "fact": 2632623.4, "pct": 0.7409, "deficit": 920733.6, "dyn": 1.0404, "managers": [{"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 1391872.46}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 951760.55}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 103872.65}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 85224.58}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 42515.52}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 25055.73}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 20412.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5873.2}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 3826.16}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2210.55}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_DKC", "tier": "ТОП", "brand": "DKC", "plan": 45044387.0, "fact": 23212573.96, "pct": 0.5153, "deficit": 21831813.04, "dyn": 0.7237, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 5022026.36, "plan": 3182450.12, "pct": 1.578, "dyn": 2.216}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 4074856.04, "plan": 4744963.0, "pct": 0.8588, "dyn": 1.2059}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 2746376.22, "plan": 6642947.62, "pct": 0.4134, "dyn": 0.5806}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 2586095.4, "plan": 4744963.0, "pct": 0.545, "dyn": 0.7653}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1985528.2, "plan": 4773675.17, "pct": 0.4159, "dyn": 0.5841}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 1624403.16, "plan": 6630648.4, "pct": 0.245, "dyn": 0.344}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 1435792.01, "plan": 1700000.0, "pct": 0.8446, "dyn": 1.186}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1318747.91, "plan": 2846977.55, "pct": 0.4632, "dyn": 0.6505}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 949366.18, "plan": 3182450.12, "pct": 0.2983, "dyn": 0.4189}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 844617.71, "plan": 4773675.17, "pct": 0.1769, "dyn": 0.2485}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 493231.88, "plan": 1004512.0, "pct": 0.491, "dyn": 0.6895}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 128984.92, "plan": 736737.6, "pct": 0.1751, "dyn": 0.2459}]}, {"full": "ТОП_ГК IEK", "tier": "ТОП", "brand": "ГК IEK", "plan": 69218740.0, "fact": 35510676.69, "pct": 0.513, "deficit": 33708063.31, "dyn": 0.7204, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 6376299.7, "plan": 7929810.8, "pct": 0.8041, "dyn": 1.1292}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 6350152.77, "plan": 7020023.0, "pct": 0.9046, "dyn": 1.2703}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 4651459.24, "plan": 9394716.2, "pct": 0.4951, "dyn": 0.6953}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 3243477.98, "plan": 6358506.2, "pct": 0.5101, "dyn": 0.7163}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 2791844.21, "plan": 3179253.1, "pct": 0.8781, "dyn": 1.2331}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 2512107.87, "plan": 4239004.0, "pct": 0.5926, "dyn": 0.8322}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 2505852.95, "plan": 9315086.4, "pct": 0.269, "dyn": 0.3778}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2406109.22, "plan": 5014302.0, "pct": 0.4798, "dyn": 0.6738}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 1702624.4, "plan": 7418257.24, "pct": 0.2295, "dyn": 0.3223}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 1120701.23, "plan": 4011443.0, "pct": 0.2794, "dyn": 0.3923}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 1000082.87, "plan": 4011442.0, "pct": 0.2493, "dyn": 0.3501}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 837422.07, "plan": 1035009.6, "pct": 0.8091, "dyn": 1.1362}]}, {"full": "Премиум_Rexant", "tier": "Премиум", "brand": "Rexant", "plan": 3537877.0, "fact": 1805621.63, "pct": 0.5104, "deficit": 1732255.37, "dyn": 0.7167, "managers": [{"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 297632.14}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 292577.83}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 280943.26}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 246376.15}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 174705.09}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 152332.82}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 145743.08}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 75748.28}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 49859.14}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 44176.31}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 25755.42}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 19227.38}]}, {"full": "Премиум_IN HOME", "tier": "Премиум", "brand": "IN HOME", "plan": 4395969.0, "fact": 1897076.0, "pct": 0.4315, "deficit": 2498893.0, "dyn": 0.606, "managers": [{"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 565899.72}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 441294.9}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 431512.17}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 169058.48}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 127594.16}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 51448.18}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 35491.63}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 25492.57}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 24759.18}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 10113.01}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 7689.81}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4623.79}]}, {"full": "Премиум_Arlight", "tier": "Премиум", "brand": "Arlight", "plan": 3691429.0, "fact": 1537103.3, "pct": 0.4164, "deficit": 2154325.7, "dyn": 0.5847, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 774163.67}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 410083.86}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 110704.37}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 107089.26}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 44594.28}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 41849.68}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 41790.27}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 6827.91}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}]}, {"full": "ТОП_КЭАЗ", "tier": "ТОП", "brand": "КЭАЗ", "plan": 5409444.0, "fact": 2442691.91, "pct": 0.4516, "deficit": 2966752.09, "dyn": 0.6341, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 1020758.66}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 314465.27}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 310421.84}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 201735.38}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 194515.73}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 102477.11}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 86070.13}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 72388.74}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 64516.59}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 45123.97}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 16959.29}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 13259.2}]}, {"full": "ТОП_DEKraft", "tier": "ТОП", "brand": "DEKraft", "plan": 8009681.0, "fact": 3291673.74, "pct": 0.411, "deficit": 4718007.26, "dyn": 0.5771, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1575586.91}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 349151.93}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 340590.65}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 331761.15}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 229115.63}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 123600.95}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 115490.92}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 77396.73}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 75689.96}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 44709.03}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 19967.18}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 8612.7}]}, {"full": "ТОП_NAVIGATOR", "tier": "ТОП", "brand": "NAVIGATOR", "plan": 5877739.0, "fact": 2251894.06, "pct": 0.3831, "deficit": 3625844.94, "dyn": 0.538, "managers": [{"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 754705.45}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 566127.58}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 288742.05}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 189997.23}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 114135.37}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 101935.03}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 88569.31}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 69430.27}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 49887.42}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 26838.5}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 26825.15}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 8970.7}]}, {"full": "ТОП_VARTON", "tier": "ТОП", "brand": "VARTON", "plan": 10311794.0, "fact": 3550324.77, "pct": 0.3443, "deficit": 6761469.23, "dyn": 0.4835, "managers": [{"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 3503841.69}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 19824.61}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 15466.31}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 5051.17}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4113.11}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 2027.88}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}]}, {"full": "ТОП_CHINT", "tier": "ТОП", "brand": "CHINT", "plan": 12333252.0, "fact": 3365165.63, "pct": 0.2729, "deficit": 8968086.37, "dyn": 0.3832, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1468963.97}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 397073.01}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 392534.59}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 316563.44}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 278804.12}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 270169.04}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 105748.57}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 91572.15}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 14642.88}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 13008.14}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 8766.11}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 7319.61}]}, {"full": "Премиум_SUPR", "tier": "Премиум", "brand": "SUPR", "plan": 577013.0, "fact": 135298.36, "pct": 0.2345, "deficit": 441714.64, "dyn": 0.3293, "managers": [{"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 54035.32}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 35090.74}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 15604.95}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 13311.76}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 6491.13}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 5010.54}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 2740.12}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 1607.05}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 1406.75}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Энергомера", "tier": "Премиум", "brand": "Энергомера", "plan": 9382191.0, "fact": 1785580.68, "pct": 0.1903, "deficit": 7596610.32, "dyn": 0.2673, "managers": [{"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 1340675.37}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 204815.02}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 91943.87}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 47396.55}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 23189.97}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 22934.25}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 21266.79}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 10392.04}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 9136.8}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 8910.02}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 4920.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}, {"full": "Премиум_Ledvance", "tier": "Премиум", "brand": "Ledvance", "plan": 1745668.0, "fact": 389364.41, "pct": 0.223, "deficit": 1356303.59, "dyn": 0.3132, "managers": [{"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 112238.69}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 107286.48}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 93258.6}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 39332.8}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 16762.74}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 8332.75}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 5442.37}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 3736.52}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 2973.46}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 0.0}]}, {"full": "ТОП_LED-effect", "tier": "ТОП", "brand": "LED-effect", "plan": 10943130.0, "fact": 252419.77, "pct": 0.0231, "deficit": 10690710.23, "dyn": 0.0324, "managers": [{"name": "Исаева Альбина Асалиевна", "sector": "Сектор КП", "fact": 252419.77}, {"name": "Мыльников Алексей Владимирович", "sector": "Сектор КП", "fact": 0.0}, {"name": "Томилина София Сергеевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Акуярви Анна Васильевна", "sector": "Сектор КП", "fact": 0.0}, {"name": "Калинина Надежда Михайловна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Земчихина Мария Владимировна", "sector": "Сектор ОП", "fact": 0.0}, {"name": "Илюшин Олег Александрович", "sector": "Сектор РП", "fact": 0.0}, {"name": "Филина Алена Алексеевна", "sector": "Сектор РП", "fact": 0.0}, {"name": "Ефимова Анна Сергеевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Соснов Владислав Валериевич", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Шаврова Светлана Евгеньевна", "sector": "Сектор СМО", "fact": 0.0}, {"name": "Евсикова Дарья Юрьевна", "sector": "Сектор СМО", "fact": 0.0}]}], "totals": {"plan": 257177882.0, "fact": 132563525.56, "pct": 0.5154546126948818, "deficit": 124614356.44}}, "kpi": {"branch": {"plan": 151792069.0, "fact": 202060859.56, "pct": 1.3312, "dyn": 1.3312, "vd_plan": 20028123.4, "vd_fact": 26640018.85, "vd_pct": 1.3301, "vd_dyn": 1.3301, "markup": 0.1565, "pdz": 47220528.3, "clients": 362, "articles": 10288, "neliquid": 807345.77}, "sectors": [{"key": "Сектор СМО", "plan": 59198907.0, "fact": 72658100.76, "pct": 1.2274, "dyn": 1.2274, "vd_plan": 7810968.0, "vd_fact": 9686207.72, "vd_pct": 1.2401, "vd_dyn": 1.2401, "markup": 0.1594, "managers": [{"name": "Ефимова Анна Сергеевна", "position": "Менеджер СМО", "sector_key": "СМО", "plan": 17759672.0, "fact": 32249433.46, "pct": 1.8159, "dyn": 1.8159, "vd_plan": 2343290.4, "vd_fact": 5031771.77, "vd_pct": 2.1473, "vd_dyn": 2.1473, "markup": 0.139, "pdz": 9123653.35, "clients": 41, "articles": 639, "neliquid": 0.0, "neliquid_items": []}, {"name": "Шаврова Светлана Евгеньевна", "position": "Вед. менеджер СМО", "sector_key": "СМО", "plan": 14799726.0, "fact": 17492855.78, "pct": 1.182, "dyn": 1.182, "vd_plan": 1952742.0, "vd_fact": 1990763.93, "vd_pct": 1.0195, "vd_dyn": 1.0195, "markup": 0.1357, "pdz": 365726.79, "clients": 38, "articles": 463, "neliquid": 8169.74, "neliquid_items": [{"code": "1680615", "name": "Перемычка для AVK4/PIK4N/AVK4C 10п UK4/10 Klemsan 0.0.0.4.74139", "qty": 9.0, "price": 382.35, "cost": 3441.14, "warehouse": "ЦС Тула", "date": "27.09.2024", "batch": "31R34639996", "zone": "243", "zone_name": "Неликвид"}, {"code": "1632559", "name": "Выключатель кнопочный КЕ-011 У3 исп.3 2НЗ цилиндр 10А IP40 660В черн. Электротехник ET511654", "qty": 26.0, "price": 90.31, "cost": 2348.07, "warehouse": "ЦС Тула", "date": "14.05.2026", "batch": "31R41773792", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1632558", "name": "Выключатель кнопочный КЕ-011 У3 исп.3 2НЗ цилиндр 10А IP40 660В красн. Электротехник ET511660", "qty": 13.0, "price": 90.31, "cost": 1174.04, "warehouse": "ЦС Тула", "date": "14.05.2026", "batch": "31R41773800", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1504996", "name": "Светильник светодиодный BCP390 4LED 30K 24V 3x90 D3 Philips 911401737303", "qty": 1.0, "price": 512.4, "cost": 512.4, "warehouse": "ЦС Москва", "date": "17.12.2023", "batch": "31R29357031", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1680615", "name": "Перемычка для AVK4/PIK4N/AVK4C 10п UK4/10 Klemsan 0.0.0.4.74139", "qty": 1.0, "price": 382.35, "cost": 382.35, "warehouse": "Рязань склад филиала", "date": "27.09.2024", "batch": "31R34639996", "zone": "111", "zone_name": "Торговый зал"}, {"code": "263956", "name": "Анкер разрезной М10 ANL10 латунь КМ LO0818", "qty": 6.0, "price": 51.96, "cost": 311.74, "warehouse": "ЦС Тула", "date": "31.01.2024", "batch": "31R31885801", "zone": "243", "zone_name": "Неликвид"}]}, {"name": "Евсикова Дарья Юрьевна", "position": "Вед. менеджер СМО", "sector_key": "СМО", "plan": 11839782.0, "fact": 11800640.06, "pct": 0.9967, "dyn": 0.9967, "vd_plan": 1562193.6, "vd_fact": 1538038.32, "vd_pct": 0.9845, "vd_dyn": 0.9845, "markup": 0.1499, "pdz": 3655667.42, "clients": 25, "articles": 371, "neliquid": 0.0, "neliquid_items": []}, {"name": "Соснов Владислав Валериевич", "position": "Менеджер СМО", "sector_key": "СМО", "plan": 14799727.0, "fact": 11115171.46, "pct": 0.751, "dyn": 0.751, "vd_plan": 1952742.0, "vd_fact": 1125633.7, "vd_pct": 0.5764, "vd_dyn": 0.5764, "markup": 0.124, "pdz": 3154586.43, "clients": 28, "articles": 533, "neliquid": 347.8, "neliquid_items": [{"code": "1586780", "name": "Заклепка резьбовая М4х07х11.6 цилиндр сталь оцинк. (уп.100шт) Промрукав PR08.4989", "qty": 1.0, "price": 347.8, "cost": 347.8, "warehouse": "ЦС Екатеринбург", "date": "24.04.2026", "batch": "29R41558070", "zone": "510", "zone_name": "Склад штучного товара"}]}]}, {"key": "Сектор КП", "plan": 47055542.0, "fact": 67597793.41, "pct": 1.4366, "dyn": 1.4366, "vd_plan": 6208718.4, "vd_fact": 11584484.02, "vd_pct": 1.8658, "vd_dyn": 1.8658, "markup": 0.1638, "managers": [{"name": "Мыльников Алексей Владимирович", "position": "Менеджер КП", "sector_key": "КП", "plan": 14116662.0, "fact": 32057245.77, "pct": 2.2709, "dyn": 2.2709, "vd_plan": 1862615.4, "vd_fact": 6307835.9, "vd_pct": 3.3865, "vd_dyn": 3.3865, "markup": 0.3103, "pdz": 9177278.13, "clients": 42, "articles": 823, "neliquid": 21390.22, "neliquid_items": [{"code": "384885", "name": "Разъединитель высоковольтный РВЗ 10/630 II УХЛ2 (с приводом) КЭАЗ 142373", "qty": 1.0, "price": 20923.34, "cost": 20923.34, "warehouse": "ЦС Тула", "date": "17.08.2026", "batch": "31R42868250", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "1036635", "name": "Наконечник НШВИ(2) 0.5-8 оранж. (уп.20шт) IEK UTE10-4-D1-8-100", "qty": 10.0, "price": 46.69, "cost": 466.88, "warehouse": "ЦС Тула", "date": "03.08.2026", "batch": "31R42703916", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Томилина София Сергеевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 14116662.0, "fact": 17036299.3, "pct": 1.2068, "dyn": 1.2068, "vd_plan": 1862615.4, "vd_fact": 2721296.4, "vd_pct": 1.461, "vd_dyn": 1.461, "markup": 0.1901, "pdz": 6705080.75, "clients": 16, "articles": 514, "neliquid": 155189.23, "neliquid_items": [{"code": "1959018", "name": "Опора ТАНС.15.023.000 (НФГ-10.0(100)-З(2)-ц) OPORA ENGINEERING OE-08437", "qty": 2.0, "price": 77262.81, "cost": 154525.62, "warehouse": "Рязань склад филиала", "date": "02.08.2026", "batch": "V3040863987", "zone": "000", "zone_name": "Основной оптовый склад филиала"}, {"code": "130782", "name": "Розетка 1-м СП Valena 16А IP44 2P+E с заземл. защ. шторки с крышкой немецк. стандарт механизм бел. IEK 774220", "qty": 1.0, "price": 663.61, "cost": 663.61, "warehouse": "ЦС Тула", "date": "06.03.2023", "batch": "31R27190807", "zone": "222", "zone_name": "Склад приёмки с ЦС"}]}, {"name": "Исаева Альбина Асалиевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 9411109.0, "fact": 9907508.54, "pct": 1.0527, "dyn": 1.0527, "vd_plan": 1241743.6, "vd_fact": 1059058.13, "vd_pct": 0.8529, "vd_dyn": 0.8529, "markup": 0.1925, "pdz": 3582749.9, "clients": 39, "articles": 435, "neliquid": 0.0, "neliquid_items": []}, {"name": "Акуярви Анна Васильевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 9411109.0, "fact": 8596739.8, "pct": 0.9135, "dyn": 0.9135, "vd_plan": 1241744.0, "vd_fact": 1496293.59, "vd_pct": 1.205, "vd_dyn": 1.205, "markup": 0.2016, "pdz": 657901.74, "clients": 16, "articles": 214, "neliquid": 349677.64, "neliquid_items": [{"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 180.0, "price": 1069.52, "cost": 192513.55, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043395", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "328779", "name": "Трансформатор тока ТТК-А 150/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219659", "qty": 108.0, "price": 1040.75, "cost": 112400.83, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43041064", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 24.0, "price": 1069.52, "cost": 25668.47, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43042207", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1214918", "name": "Трансформатор тока ТТК-А 300/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239697", "qty": 15.0, "price": 1034.36, "cost": 15515.34, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043273", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 2.0, "price": 1193.15, "cost": 2386.3, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43040717", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 1.0, "price": 1193.15, "cost": 1193.15, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43038830", "zone": "510", "zone_name": "Склад импортного товара"}]}]}, {"key": "Сектор ОП", "plan": 18215048.0, "fact": 39272061.46, "pct": 2.156, "dyn": 2.156, "vd_plan": 2403375.0, "vd_fact": 2904106.5, "vd_pct": 1.2083, "vd_dyn": 1.2083, "markup": 0.1081, "managers": [{"name": "Калинина Надежда Михайловна", "position": "Менеджер ОП", "sector_key": "ОП", "plan": 16215048.0, "fact": 20069154.55, "pct": 1.2377, "dyn": 1.2377, "vd_plan": 1938375.0, "vd_fact": 1917895.89, "vd_pct": 0.9894, "vd_dyn": 0.9894, "markup": 0.1057, "pdz": 2695142.83, "clients": 18, "articles": 1106, "neliquid": 73807.58, "neliquid_items": [{"code": "1446559", "name": "Вязка спиральная немагнитная ВСн 70/95.2 МЗВА 00000010293", "qty": 120.0, "price": 201.8, "cost": 24215.51, "warehouse": "ЦС Москва", "date": "20.08.2026", "batch": "77R42917655", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1381002", "name": "Ограничитель перенапряжения ОПНп-6/6.9/10/450 УХЛ1 ЗЭУ", "qty": 6.0, "price": 2164.89, "cost": 12989.34, "warehouse": "ЦС Москва", "date": "21.07.2026", "batch": "01R42529024", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "361242", "name": "Зажим плашечный ПС-2-1А (d9.1-12мм) ВК 21100451", "qty": 100.0, "price": 99.06, "cost": 9906.37, "warehouse": "ЦС Москва", "date": "22.07.2026", "batch": "77R42556661", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1459266", "name": "Изолятор ЛК 70/10-И-3 ГС полимер. INSTA 00000000373", "qty": 8.0, "price": 975.33, "cost": 7802.6, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42574492", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1915582", "name": "Проводник заземляющий ЗП-1 (4.5м) краска ФЕРРУМ НФ-00000662", "qty": 6.0, "price": 900.9, "cost": 5405.4, "warehouse": "ЦС Москва", "date": "11.05.2026", "batch": "01R41727488", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "123553", "name": "Узел крепления У-52 (крепление подкоса; тип. проект 27.0002; Л56-97; Л57-97) покрытие черн. лак АЭМЗ 00000053", "qty": 3.0, "price": 1415.51, "cost": 4246.52, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42571800", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "1459266", "name": "Изолятор ЛК 70/10-И-3 ГС полимер. INSTA 00000000373", "qty": 4.0, "price": 975.33, "cost": 3901.3, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42574964", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1282907", "name": "Коробка распаячная огнестойкая ПС 100х100х50 6P 4кв.мм IP44 гладкие стенки IEK UKF20-100-100-050-6-4-09", "qty": 2.0, "price": 1399.81, "cost": 2799.63, "warehouse": "ЦС Тула", "date": "23.04.2025", "batch": "31R37065065", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "91312", "name": "Зажим аппаратный А1А-95 МЗВА 00000228", "qty": 12.0, "price": 137.45, "cost": 1649.34, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42571592", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "361242", "name": "Зажим плашечный ПС-2-1А (d9.1-12мм) ВК 21100451", "qty": 9.0, "price": 99.06, "cost": 891.57, "warehouse": "ЦС Москва", "date": "22.07.2026", "batch": "77R42556092", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Земчихина Мария Владимировна", "position": "Менеджер ОП", "sector_key": "ОП", "plan": 2000000.0, "fact": 2465010.55, "pct": 1.2325, "dyn": 1.2325, "vd_plan": 465000.0, "vd_fact": 303818.52, "vd_pct": 0.6534, "vd_dyn": 0.6534, "markup": 0.1406, "pdz": 14744.91, "clients": 25, "articles": 720, "neliquid": 2955.26, "neliquid_items": [{"code": "1175053", "name": "Пускатель ПМ12-010240 У3 В кат. 220В 1НО с реле РТТ5-10-1 0.40А Кашин 020240102ВВ220000610", "qty": 1.0, "price": 2805.24, "cost": 2805.24, "warehouse": "ЦС Тула", "date": "13.08.2024", "batch": "01R33401138", "zone": "243", "zone_name": "Неликвид"}, {"code": "92431", "name": "Держатель для труб (клипса) d20мм универс. Ruvinil К01120У", "qty": 42.0, "price": 3.57, "cost": 150.02, "warehouse": "ЦС Тула", "date": "22.07.2026", "batch": "31R42551087", "zone": "510", "zone_name": "Склад импортного товара"}]}]}, {"key": "Сектор РП", "plan": 27322572.0, "fact": 22534165.1, "pct": 0.8247, "dyn": 0.8247, "vd_plan": 3605062.0, "vd_fact": 2221714.42, "vd_pct": 0.6163, "vd_dyn": 0.6163, "markup": 0.1083, "managers": [{"name": "Илюшин Олег Александрович", "position": "Менеджер РП", "sector_key": "РП", "plan": 13661286.0, "fact": 24704185.49, "pct": 1.8083, "dyn": 1.8083, "vd_plan": 1802531.0, "vd_fact": 1866780.78, "vd_pct": 1.0356, "vd_dyn": 1.0356, "markup": 0.0817, "pdz": 1863024.69, "clients": 48, "articles": 2240, "neliquid": 2064.42, "neliquid_items": [{"code": "1365954", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой оранж. (уп.50м) DKC 7192050", "qty": 1.0, "price": 1098.46, "cost": 1098.46, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955367", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1365949", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой черн. (уп.25м) DKC 7172025", "qty": 1.0, "price": 587.34, "cost": 587.34, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955371", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1645401", "name": "Скоба крепежная однолапковая d40мм метал. Ruvinil С01340", "qty": 20.0, "price": 9.62, "cost": 192.41, "warehouse": "ЦС Тула", "date": "02.09.2026", "batch": "31R43063839", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1646069", "name": "Паяльник 90 201 OSE-Pes05-100W-KP дерево; конус прямой ОНЛАЙТ 90201", "qty": 1.0, "price": 186.22, "cost": 186.22, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43013987", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Филина Алена Алексеевна", "position": "Менеджер РП", "sector_key": "РП", "plan": 13661286.0, "fact": 14567875.97, "pct": 1.0664, "dyn": 1.0664, "vd_plan": 1802531.0, "vd_fact": 1037325.73, "vd_pct": 0.5755, "vd_dyn": 0.5755, "markup": 0.0828, "pdz": 4369434.66, "clients": 35, "articles": 2230, "neliquid": 193743.88, "neliquid_items": [{"code": "1808026", "name": "Газонокосилка бензиновая PT 47BS 3.5 л.с. PATRIOT 512109016", "qty": 3.0, "price": 35694.42, "cost": 107083.27, "warehouse": "ЦС Тверь", "date": "18.12.2024", "batch": "V3032582248", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "2061280", "name": "Прожектор светодиодный GREEN LINE FITO-200W-Ra90-LED-Y-GR 200Вт 4800-5000К IP65 для растений полного спектра Эра Б0069870", "qty": 10.0, "price": 1114.47, "cost": 11144.7, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41218544", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "202374", "name": "Реле промежуточное РП 25/4 10А 12В EKF rp-25-4-12", "qty": 20.0, "price": 442.3, "cost": 8846.07, "warehouse": "ЦС Тула", "date": "13.03.2026", "batch": "31R39891269", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 9.0, "price": 891.58, "cost": 8024.18, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40830801", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 8.0, "price": 891.58, "cost": 7132.61, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213643", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 10.0, "price": 646.9, "cost": 6469.05, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834299", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 10.0, "price": 644.98, "cost": 6449.84, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834402", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 9.0, "price": 646.9, "cost": 5822.15, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213337", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 9.0, "price": 644.98, "cost": 5804.85, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41214920", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1400449", "name": "Комплект светодиодной ленты ULS-P71-2835-42LED/m-IP65-2M-SPLE RRP18C00 спектр для фотосинтеза 2м адаптер 18Вт блистер Uniel UL-00007572", "qty": 20.0, "price": 230.58, "cost": 4611.6, "warehouse": "ЦС Тверь", "date": "05.04.2024", "batch": "V3027683779", "zone": "243", "zone_name": "Склад низкооборачиваемого товара"}, {"code": "1376591", "name": "Гирлянда светодиодная \"Роса\" 30м 300LED тепл. бел. 3.6Вт IP44 с трансф. Neon-Night 303-216", "qty": 4.0, "price": 995.76, "cost": 3983.02, "warehouse": "ЦС Тула", "date": "01.04.2026", "batch": "31R39566924", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1499131", "name": "Лампа светодиодная ERAYL50-E27 A50 3Вт груша желт. E27 13SMD для белт-лайт ЭРА Б0049581", "qty": 45.0, "price": 63.22, "cost": 2844.78, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40265885", "zone": "243", "zone_name": "Неликвид"}, {"code": "1499123", "name": "Лампа светодиодная ERABL50-E27 A50 3Вт груша син. E27 13SMD для белт-лайт ЭРА Б0049578", "qty": 40.0, "price": 63.22, "cost": 2528.69, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40263466", "zone": "243", "zone_name": "Неликвид"}, {"code": "2061275", "name": "Светильник светодиодный (фитолампа) FITO-24W-Ra90 24Вт IP20 линейный для растений полного спектра Эра Б0069717", "qty": 4.0, "price": 590.54, "cost": 2362.16, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41206719", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1499125", "name": "Лампа светодиодная ERAGL50-E27 A50 3Вт груша зел. E27 13SMD для белт-лайт ЭРА Б0049579", "qty": 24.0, "price": 63.19, "cost": 1516.57, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40266257", "zone": "243", "zone_name": "Неликвид"}, {"code": "1810925", "name": "Колодка удлинителя 2-м с заземл. черн. KX-2e-B Эра Б0061711", "qty": 10.0, "price": 101.84, "cost": 1018.39, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40833493", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2020738", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлФ фисташк. IEK FI-M12-31-20-K93", "qty": 20.0, "price": 50.22, "cost": 1004.3, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43011442", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1931433", "name": "Рамка 4-м СП Accent 6-504-05 антрацит Intro Б0063710", "qty": 8.0, "price": 113.21, "cost": 905.72, "warehouse": "ЦС Тула", "date": "23.10.2025", "batch": "31R37324127", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 1.0, "price": 891.58, "cost": 891.58, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40831126", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1901702", "name": "Шина PEN земля-ноль 6х9мм 8/1 никелированная с креплениями по центру NO-224-79 Эра Б0062870", "qty": 10.0, "price": 63.41, "cost": 634.1, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834580", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2020727", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлЖК желт. карри IEK FI-M12-31-20-K44", "qty": 10.0, "price": 50.22, "cost": 502.15, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43010900", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "324163", "name": "Лампа светодиодная LED-A60-9Вт/SP/E27/CL грушевидная ALM01WH картон Uniel 09645", "qty": 13.0, "price": 38.43, "cost": 499.59, "warehouse": "ЦС Тула", "date": "02.04.2024", "batch": "31R27102530", "zone": "243", "zone_name": "Неликвид"}, {"code": "222729", "name": "Выключатель автоматический модульный 2п D 25А 4.5кА ВА47-29 KARAT IEK MVA20-2-025-D", "qty": 1.0, "price": 489.97, "cost": 489.97, "warehouse": "ЦС Тула", "date": "21.08.2026", "batch": "31R42928432", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "2061284", "name": "Лампа светодиодная FITO-20W-RB-E27 20Вт грушевидная прозрачная 1300К красн./син. спектра E27 130-270В для растений Эра Б0069710", "qty": 4.0, "price": 110.17, "cost": 440.66, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213245", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1367977", "name": "Лампа декоративная светодиод. LED-G60-3W/3000K/E27/FR/С Шармат 3000К упак. картон. Volpe UL-00006955", "qty": 7.0, "price": 60.08, "cost": 420.55, "warehouse": "ЦС Тула", "date": "20.12.2024", "batch": "31R35833655", "zone": "243", "zone_name": "Неликвид"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 2.0, "price": 201.37, "cost": 402.75, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996576", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1499123", "name": "Лампа светодиодная ERABL50-E27 A50 3Вт груша син. E27 13SMD для белт-лайт ЭРА Б0049578", "qty": 5.0, "price": 63.22, "cost": 316.09, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40263495", "zone": "243", "zone_name": "Неликвид"}, {"code": "2038649", "name": "Вывод кабеля СП ZIMA IP20 механизм бел. LEZARD 704-0288-197", "qty": 2.0, "price": 154.67, "cost": 309.34, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996327", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1481573", "name": "Выключатель автоматический модульный 1п C 63А 6кА MD63 YON MD63-1C63-6", "qty": 4.0, "price": 70.34, "cost": 281.36, "warehouse": "ЦС Тула", "date": "02.11.2022", "batch": "01R24993702", "zone": "243", "zone_name": "Неликвид"}, {"code": "1340771", "name": "Лампа светодиодная LED-A60-10W/4000K/E27 /PS PLS10WH 10Вт матовая 4000К нейтр. бел. E27 с датчиком освещенности (упак. картон) Uniel UL-00005710", "qty": 1.0, "price": 246.89, "cost": 246.89, "warehouse": "ЦС Самара", "date": "05.04.2024", "batch": "V3028907840", "zone": "011", "zone_name": "Возврат поставщику (фактический)_Обр_лог"}, {"code": "517451", "name": "Гирлянда \"Бахрома\" светодиодная ULD-B3010-200/TTK WARM WHITE IP44 с эффектом мерцания Uniel UL-00003949", "qty": 1.0, "price": 230.58, "cost": 230.58, "warehouse": "ЦС Тула", "date": "20.02.2024", "batch": "31R30984894", "zone": "011", "zone_name": "Возврат поставщику (фактический)_Обр_лог"}, {"code": "1931433", "name": "Рамка 4-м СП Accent 6-504-05 антрацит Intro Б0063710", "qty": 2.0, "price": 113.21, "cost": 226.43, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834715", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 1.0, "price": 201.37, "cost": 201.37, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996574", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1367977", "name": "Лампа декоративная светодиод. LED-G60-3W/3000K/E27/FR/С Шармат 3000К упак. картон. Volpe UL-00006955", "qty": 1.0, "price": 60.08, "cost": 60.08, "warehouse": "ЦС Тула", "date": "20.12.2024", "batch": "31R35833655", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1381897", "name": "Лампа светодиодная LED-P65-24W/SPSB/E27/FR/P3 PLP32WH 24Вт P65 лепестковая матовая E27 для растений спектр для рассады и цветения (упак. картон) Uniel UL-00007407", "qty": 1.0, "price": 38.43, "cost": 38.43, "warehouse": "ЦС Тверь", "date": "05.04.2024", "batch": "V3027683781", "zone": "243", "zone_name": "Склад низкооборачиваемого товара"}]}]}], "managers": [{"name": "Мыльников Алексей Владимирович", "position": "Менеджер КП", "sector_key": "КП", "plan": 14116662.0, "fact": 32057245.77, "pct": 2.2709, "dyn": 2.2709, "vd_plan": 1862615.4, "vd_fact": 6307835.9, "vd_pct": 3.3865, "vd_dyn": 3.3865, "markup": 0.3103, "pdz": 9177278.13, "clients": 42, "articles": 823, "neliquid": 21390.22, "neliquid_items": [{"code": "384885", "name": "Разъединитель высоковольтный РВЗ 10/630 II УХЛ2 (с приводом) КЭАЗ 142373", "qty": 1.0, "price": 20923.34, "cost": 20923.34, "warehouse": "ЦС Тула", "date": "17.08.2026", "batch": "31R42868250", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "1036635", "name": "Наконечник НШВИ(2) 0.5-8 оранж. (уп.20шт) IEK UTE10-4-D1-8-100", "qty": 10.0, "price": 46.69, "cost": 466.88, "warehouse": "ЦС Тула", "date": "03.08.2026", "batch": "31R42703916", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Томилина София Сергеевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 14116662.0, "fact": 17036299.3, "pct": 1.2068, "dyn": 1.2068, "vd_plan": 1862615.4, "vd_fact": 2721296.4, "vd_pct": 1.461, "vd_dyn": 1.461, "markup": 0.1901, "pdz": 6705080.75, "clients": 16, "articles": 514, "neliquid": 155189.23, "neliquid_items": [{"code": "1959018", "name": "Опора ТАНС.15.023.000 (НФГ-10.0(100)-З(2)-ц) OPORA ENGINEERING OE-08437", "qty": 2.0, "price": 77262.81, "cost": 154525.62, "warehouse": "Рязань склад филиала", "date": "02.08.2026", "batch": "V3040863987", "zone": "000", "zone_name": "Основной оптовый склад филиала"}, {"code": "130782", "name": "Розетка 1-м СП Valena 16А IP44 2P+E с заземл. защ. шторки с крышкой немецк. стандарт механизм бел. IEK 774220", "qty": 1.0, "price": 663.61, "cost": 663.61, "warehouse": "ЦС Тула", "date": "06.03.2023", "batch": "31R27190807", "zone": "222", "zone_name": "Склад приёмки с ЦС"}]}, {"name": "Акуярви Анна Васильевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 9411109.0, "fact": 8596739.8, "pct": 0.9135, "dyn": 0.9135, "vd_plan": 1241744.0, "vd_fact": 1496293.59, "vd_pct": 1.205, "vd_dyn": 1.205, "markup": 0.2016, "pdz": 657901.74, "clients": 16, "articles": 214, "neliquid": 349677.64, "neliquid_items": [{"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 180.0, "price": 1069.52, "cost": 192513.55, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043395", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "328779", "name": "Трансформатор тока ТТК-А 150/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219659", "qty": 108.0, "price": 1040.75, "cost": 112400.83, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43041064", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 24.0, "price": 1069.52, "cost": 25668.47, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43042207", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1214918", "name": "Трансформатор тока ТТК-А 300/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239697", "qty": 15.0, "price": 1034.36, "cost": 15515.34, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043273", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 2.0, "price": 1193.15, "cost": 2386.3, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43040717", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 1.0, "price": 1193.15, "cost": 1193.15, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43038830", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Исаева Альбина Асалиевна", "position": "Менеджер КП", "sector_key": "КП", "plan": 9411109.0, "fact": 9907508.54, "pct": 1.0527, "dyn": 1.0527, "vd_plan": 1241743.6, "vd_fact": 1059058.13, "vd_pct": 0.8529, "vd_dyn": 0.8529, "markup": 0.1925, "pdz": 3582749.9, "clients": 39, "articles": 435, "neliquid": 0.0, "neliquid_items": []}, {"name": "Калинина Надежда Михайловна", "position": "Менеджер ОП", "sector_key": "ОП", "plan": 16215048.0, "fact": 20069154.55, "pct": 1.2377, "dyn": 1.2377, "vd_plan": 1938375.0, "vd_fact": 1917895.89, "vd_pct": 0.9894, "vd_dyn": 0.9894, "markup": 0.1057, "pdz": 2695142.83, "clients": 18, "articles": 1106, "neliquid": 73807.58, "neliquid_items": [{"code": "1446559", "name": "Вязка спиральная немагнитная ВСн 70/95.2 МЗВА 00000010293", "qty": 120.0, "price": 201.8, "cost": 24215.51, "warehouse": "ЦС Москва", "date": "20.08.2026", "batch": "77R42917655", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1381002", "name": "Ограничитель перенапряжения ОПНп-6/6.9/10/450 УХЛ1 ЗЭУ", "qty": 6.0, "price": 2164.89, "cost": 12989.34, "warehouse": "ЦС Москва", "date": "21.07.2026", "batch": "01R42529024", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "361242", "name": "Зажим плашечный ПС-2-1А (d9.1-12мм) ВК 21100451", "qty": 100.0, "price": 99.06, "cost": 9906.37, "warehouse": "ЦС Москва", "date": "22.07.2026", "batch": "77R42556661", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1459266", "name": "Изолятор ЛК 70/10-И-3 ГС полимер. INSTA 00000000373", "qty": 8.0, "price": 975.33, "cost": 7802.6, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42574492", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1915582", "name": "Проводник заземляющий ЗП-1 (4.5м) краска ФЕРРУМ НФ-00000662", "qty": 6.0, "price": 900.9, "cost": 5405.4, "warehouse": "ЦС Москва", "date": "11.05.2026", "batch": "01R41727488", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "123553", "name": "Узел крепления У-52 (крепление подкоса; тип. проект 27.0002; Л56-97; Л57-97) покрытие черн. лак АЭМЗ 00000053", "qty": 3.0, "price": 1415.51, "cost": 4246.52, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42571800", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "1459266", "name": "Изолятор ЛК 70/10-И-3 ГС полимер. INSTA 00000000373", "qty": 4.0, "price": 975.33, "cost": 3901.3, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42574964", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1282907", "name": "Коробка распаячная огнестойкая ПС 100х100х50 6P 4кв.мм IP44 гладкие стенки IEK UKF20-100-100-050-6-4-09", "qty": 2.0, "price": 1399.81, "cost": 2799.63, "warehouse": "ЦС Тула", "date": "23.04.2025", "batch": "31R37065065", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "91312", "name": "Зажим аппаратный А1А-95 МЗВА 00000228", "qty": 12.0, "price": 137.45, "cost": 1649.34, "warehouse": "ЦС Москва", "date": "23.07.2026", "batch": "77R42571592", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "361242", "name": "Зажим плашечный ПС-2-1А (d9.1-12мм) ВК 21100451", "qty": 9.0, "price": 99.06, "cost": 891.57, "warehouse": "ЦС Москва", "date": "22.07.2026", "batch": "77R42556092", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Земчихина Мария Владимировна", "position": "Менеджер ОП", "sector_key": "ОП", "plan": 2000000.0, "fact": 2465010.55, "pct": 1.2325, "dyn": 1.2325, "vd_plan": 465000.0, "vd_fact": 303818.52, "vd_pct": 0.6534, "vd_dyn": 0.6534, "markup": 0.1406, "pdz": 14744.91, "clients": 25, "articles": 720, "neliquid": 2955.26, "neliquid_items": [{"code": "1175053", "name": "Пускатель ПМ12-010240 У3 В кат. 220В 1НО с реле РТТ5-10-1 0.40А Кашин 020240102ВВ220000610", "qty": 1.0, "price": 2805.24, "cost": 2805.24, "warehouse": "ЦС Тула", "date": "13.08.2024", "batch": "01R33401138", "zone": "243", "zone_name": "Неликвид"}, {"code": "92431", "name": "Держатель для труб (клипса) d20мм универс. Ruvinil К01120У", "qty": 42.0, "price": 3.57, "cost": 150.02, "warehouse": "ЦС Тула", "date": "22.07.2026", "batch": "31R42551087", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Илюшин Олег Александрович", "position": "Менеджер РП", "sector_key": "РП", "plan": 13661286.0, "fact": 24704185.49, "pct": 1.8083, "dyn": 1.8083, "vd_plan": 1802531.0, "vd_fact": 1866780.78, "vd_pct": 1.0356, "vd_dyn": 1.0356, "markup": 0.0817, "pdz": 1863024.69, "clients": 48, "articles": 2240, "neliquid": 2064.42, "neliquid_items": [{"code": "1365954", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой оранж. (уп.50м) DKC 7192050", "qty": 1.0, "price": 1098.46, "cost": 1098.46, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955367", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1365949", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой черн. (уп.25м) DKC 7172025", "qty": 1.0, "price": 587.34, "cost": 587.34, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955371", "zone": "206", "zone_name": "Склад прочего товара (коробки)"}, {"code": "1645401", "name": "Скоба крепежная однолапковая d40мм метал. Ruvinil С01340", "qty": 20.0, "price": 9.62, "cost": 192.41, "warehouse": "ЦС Тула", "date": "02.09.2026", "batch": "31R43063839", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1646069", "name": "Паяльник 90 201 OSE-Pes05-100W-KP дерево; конус прямой ОНЛАЙТ 90201", "qty": 1.0, "price": 186.22, "cost": 186.22, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43013987", "zone": "510", "zone_name": "Склад импортного товара"}]}, {"name": "Филина Алена Алексеевна", "position": "Менеджер РП", "sector_key": "РП", "plan": 13661286.0, "fact": 14567875.97, "pct": 1.0664, "dyn": 1.0664, "vd_plan": 1802531.0, "vd_fact": 1037325.73, "vd_pct": 0.5755, "vd_dyn": 0.5755, "markup": 0.0828, "pdz": 4369434.66, "clients": 35, "articles": 2230, "neliquid": 193743.88, "neliquid_items": [{"code": "1808026", "name": "Газонокосилка бензиновая PT 47BS 3.5 л.с. PATRIOT 512109016", "qty": 3.0, "price": 35694.42, "cost": 107083.27, "warehouse": "ЦС Тверь", "date": "18.12.2024", "batch": "V3032582248", "zone": "200", "zone_name": "Склад паллетного хранения"}, {"code": "2061280", "name": "Прожектор светодиодный GREEN LINE FITO-200W-Ra90-LED-Y-GR 200Вт 4800-5000К IP65 для растений полного спектра Эра Б0069870", "qty": 10.0, "price": 1114.47, "cost": 11144.7, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41218544", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "202374", "name": "Реле промежуточное РП 25/4 10А 12В EKF rp-25-4-12", "qty": 20.0, "price": 442.3, "cost": 8846.07, "warehouse": "ЦС Тула", "date": "13.03.2026", "batch": "31R39891269", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 9.0, "price": 891.58, "cost": 8024.18, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40830801", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 8.0, "price": 891.58, "cost": 7132.61, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213643", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 10.0, "price": 646.9, "cost": 6469.05, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834299", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 10.0, "price": 644.98, "cost": 6449.84, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834402", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 9.0, "price": 646.9, "cost": 5822.15, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213337", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 9.0, "price": 644.98, "cost": 5804.85, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41214920", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1400449", "name": "Комплект светодиодной ленты ULS-P71-2835-42LED/m-IP65-2M-SPLE RRP18C00 спектр для фотосинтеза 2м адаптер 18Вт блистер Uniel UL-00007572", "qty": 20.0, "price": 230.58, "cost": 4611.6, "warehouse": "ЦС Тверь", "date": "05.04.2024", "batch": "V3027683779", "zone": "243", "zone_name": "Склад низкооборачиваемого товара"}, {"code": "1376591", "name": "Гирлянда светодиодная \"Роса\" 30м 300LED тепл. бел. 3.6Вт IP44 с трансф. Neon-Night 303-216", "qty": 4.0, "price": 995.76, "cost": 3983.02, "warehouse": "ЦС Тула", "date": "01.04.2026", "batch": "31R39566924", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1499131", "name": "Лампа светодиодная ERAYL50-E27 A50 3Вт груша желт. E27 13SMD для белт-лайт ЭРА Б0049581", "qty": 45.0, "price": 63.22, "cost": 2844.78, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40265885", "zone": "243", "zone_name": "Неликвид"}, {"code": "1499123", "name": "Лампа светодиодная ERABL50-E27 A50 3Вт груша син. E27 13SMD для белт-лайт ЭРА Б0049578", "qty": 40.0, "price": 63.22, "cost": 2528.69, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40263466", "zone": "243", "zone_name": "Неликвид"}, {"code": "2061275", "name": "Светильник светодиодный (фитолампа) FITO-24W-Ra90 24Вт IP20 линейный для растений полного спектра Эра Б0069717", "qty": 4.0, "price": 590.54, "cost": 2362.16, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41206719", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1499125", "name": "Лампа светодиодная ERAGL50-E27 A50 3Вт груша зел. E27 13SMD для белт-лайт ЭРА Б0049579", "qty": 24.0, "price": 63.19, "cost": 1516.57, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40266257", "zone": "243", "zone_name": "Неликвид"}, {"code": "1810925", "name": "Колодка удлинителя 2-м с заземл. черн. KX-2e-B Эра Б0061711", "qty": 10.0, "price": 101.84, "cost": 1018.39, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40833493", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2020738", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлФ фисташк. IEK FI-M12-31-20-K93", "qty": 20.0, "price": 50.22, "cost": 1004.3, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43011442", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1931433", "name": "Рамка 4-м СП Accent 6-504-05 антрацит Intro Б0063710", "qty": 8.0, "price": 113.21, "cost": 905.72, "warehouse": "ЦС Тула", "date": "23.10.2025", "batch": "31R37324127", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 1.0, "price": 891.58, "cost": 891.58, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40831126", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1901702", "name": "Шина PEN земля-ноль 6х9мм 8/1 никелированная с креплениями по центру NO-224-79 Эра Б0062870", "qty": 10.0, "price": 63.41, "cost": 634.1, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834580", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2020727", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлЖК желт. карри IEK FI-M12-31-20-K44", "qty": 10.0, "price": 50.22, "cost": 502.15, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43010900", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "324163", "name": "Лампа светодиодная LED-A60-9Вт/SP/E27/CL грушевидная ALM01WH картон Uniel 09645", "qty": 13.0, "price": 38.43, "cost": 499.59, "warehouse": "ЦС Тула", "date": "02.04.2024", "batch": "31R27102530", "zone": "243", "zone_name": "Неликвид"}, {"code": "222729", "name": "Выключатель автоматический модульный 2п D 25А 4.5кА ВА47-29 KARAT IEK MVA20-2-025-D", "qty": 1.0, "price": 489.97, "cost": 489.97, "warehouse": "ЦС Тула", "date": "21.08.2026", "batch": "31R42928432", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "2061284", "name": "Лампа светодиодная FITO-20W-RB-E27 20Вт грушевидная прозрачная 1300К красн./син. спектра E27 130-270В для растений Эра Б0069710", "qty": 4.0, "price": 110.17, "cost": 440.66, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213245", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1367977", "name": "Лампа декоративная светодиод. LED-G60-3W/3000K/E27/FR/С Шармат 3000К упак. картон. Volpe UL-00006955", "qty": 7.0, "price": 60.08, "cost": 420.55, "warehouse": "ЦС Тула", "date": "20.12.2024", "batch": "31R35833655", "zone": "243", "zone_name": "Неликвид"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 2.0, "price": 201.37, "cost": 402.75, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996576", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1499123", "name": "Лампа светодиодная ERABL50-E27 A50 3Вт груша син. E27 13SMD для белт-лайт ЭРА Б0049578", "qty": 5.0, "price": 63.22, "cost": 316.09, "warehouse": "ЦС Тула", "date": "21.01.2026", "batch": "31R40263495", "zone": "243", "zone_name": "Неликвид"}, {"code": "2038649", "name": "Вывод кабеля СП ZIMA IP20 механизм бел. LEZARD 704-0288-197", "qty": 2.0, "price": 154.67, "cost": 309.34, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996327", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1481573", "name": "Выключатель автоматический модульный 1п C 63А 6кА MD63 YON MD63-1C63-6", "qty": 4.0, "price": 70.34, "cost": 281.36, "warehouse": "ЦС Тула", "date": "02.11.2022", "batch": "01R24993702", "zone": "243", "zone_name": "Неликвид"}, {"code": "1340771", "name": "Лампа светодиодная LED-A60-10W/4000K/E27 /PS PLS10WH 10Вт матовая 4000К нейтр. бел. E27 с датчиком освещенности (упак. картон) Uniel UL-00005710", "qty": 1.0, "price": 246.89, "cost": 246.89, "warehouse": "ЦС Самара", "date": "05.04.2024", "batch": "V3028907840", "zone": "011", "zone_name": "Возврат поставщику (фактический)_Обр_лог"}, {"code": "517451", "name": "Гирлянда \"Бахрома\" светодиодная ULD-B3010-200/TTK WARM WHITE IP44 с эффектом мерцания Uniel UL-00003949", "qty": 1.0, "price": 230.58, "cost": 230.58, "warehouse": "ЦС Тула", "date": "20.02.2024", "batch": "31R30984894", "zone": "011", "zone_name": "Возврат поставщику (фактический)_Обр_лог"}, {"code": "1931433", "name": "Рамка 4-м СП Accent 6-504-05 антрацит Intro Б0063710", "qty": 2.0, "price": 113.21, "cost": 226.43, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834715", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 1.0, "price": 201.37, "cost": 201.37, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996574", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1367977", "name": "Лампа декоративная светодиод. LED-G60-3W/3000K/E27/FR/С Шармат 3000К упак. картон. Volpe UL-00006955", "qty": 1.0, "price": 60.08, "cost": 60.08, "warehouse": "ЦС Тула", "date": "20.12.2024", "batch": "31R35833655", "zone": "222", "zone_name": "Склад приёмки с ЦС"}, {"code": "1381897", "name": "Лампа светодиодная LED-P65-24W/SPSB/E27/FR/P3 PLP32WH 24Вт P65 лепестковая матовая E27 для растений спектр для рассады и цветения (упак. картон) Uniel UL-00007407", "qty": 1.0, "price": 38.43, "cost": 38.43, "warehouse": "ЦС Тверь", "date": "05.04.2024", "batch": "V3027683781", "zone": "243", "zone_name": "Склад низкооборачиваемого товара"}]}, {"name": "Ефимова Анна Сергеевна", "position": "Менеджер СМО", "sector_key": "СМО", "plan": 17759672.0, "fact": 32249433.46, "pct": 1.8159, "dyn": 1.8159, "vd_plan": 2343290.4, "vd_fact": 5031771.77, "vd_pct": 2.1473, "vd_dyn": 2.1473, "markup": 0.139, "pdz": 9123653.35, "clients": 41, "articles": 639, "neliquid": 0.0, "neliquid_items": []}, {"name": "Соснов Владислав Валериевич", "position": "Менеджер СМО", "sector_key": "СМО", "plan": 14799727.0, "fact": 11115171.46, "pct": 0.751, "dyn": 0.751, "vd_plan": 1952742.0, "vd_fact": 1125633.7, "vd_pct": 0.5764, "vd_dyn": 0.5764, "markup": 0.124, "pdz": 3154586.43, "clients": 28, "articles": 533, "neliquid": 347.8, "neliquid_items": [{"code": "1586780", "name": "Заклепка резьбовая М4х07х11.6 цилиндр сталь оцинк. (уп.100шт) Промрукав PR08.4989", "qty": 1.0, "price": 347.8, "cost": 347.8, "warehouse": "ЦС Екатеринбург", "date": "24.04.2026", "batch": "29R41558070", "zone": "510", "zone_name": "Склад штучного товара"}]}, {"name": "Шаврова Светлана Евгеньевна", "position": "Вед. менеджер СМО", "sector_key": "СМО", "plan": 14799726.0, "fact": 17492855.78, "pct": 1.182, "dyn": 1.182, "vd_plan": 1952742.0, "vd_fact": 1990763.93, "vd_pct": 1.0195, "vd_dyn": 1.0195, "markup": 0.1357, "pdz": 365726.79, "clients": 38, "articles": 463, "neliquid": 8169.74, "neliquid_items": [{"code": "1680615", "name": "Перемычка для AVK4/PIK4N/AVK4C 10п UK4/10 Klemsan 0.0.0.4.74139", "qty": 9.0, "price": 382.35, "cost": 3441.14, "warehouse": "ЦС Тула", "date": "27.09.2024", "batch": "31R34639996", "zone": "243", "zone_name": "Неликвид"}, {"code": "1632559", "name": "Выключатель кнопочный КЕ-011 У3 исп.3 2НЗ цилиндр 10А IP40 660В черн. Электротехник ET511654", "qty": 26.0, "price": 90.31, "cost": 2348.07, "warehouse": "ЦС Тула", "date": "14.05.2026", "batch": "31R41773792", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1632558", "name": "Выключатель кнопочный КЕ-011 У3 исп.3 2НЗ цилиндр 10А IP40 660В красн. Электротехник ET511660", "qty": 13.0, "price": 90.31, "cost": 1174.04, "warehouse": "ЦС Тула", "date": "14.05.2026", "batch": "31R41773800", "zone": "900", "zone_name": "Склад отгрузки"}, {"code": "1504996", "name": "Светильник светодиодный BCP390 4LED 30K 24V 3x90 D3 Philips 911401737303", "qty": 1.0, "price": 512.4, "cost": 512.4, "warehouse": "ЦС Москва", "date": "17.12.2023", "batch": "31R29357031", "zone": "510", "zone_name": "Склад импортного товара"}, {"code": "1680615", "name": "Перемычка для AVK4/PIK4N/AVK4C 10п UK4/10 Klemsan 0.0.0.4.74139", "qty": 1.0, "price": 382.35, "cost": 382.35, "warehouse": "Рязань склад филиала", "date": "27.09.2024", "batch": "31R34639996", "zone": "111", "zone_name": "Торговый зал"}, {"code": "263956", "name": "Анкер разрезной М10 ANL10 латунь КМ LO0818", "qty": 6.0, "price": 51.96, "cost": 311.74, "warehouse": "ЦС Тула", "date": "31.01.2024", "batch": "31R31885801", "zone": "243", "zone_name": "Неликвид"}]}, {"name": "Евсикова Дарья Юрьевна", "position": "Вед. менеджер СМО", "sector_key": "СМО", "plan": 11839782.0, "fact": 11800640.06, "pct": 0.9967, "dyn": 0.9967, "vd_plan": 1562193.6, "vd_fact": 1538038.32, "vd_pct": 0.9845, "vd_dyn": 0.9845, "markup": 0.1499, "pdz": 3655667.42, "clients": 25, "articles": 371, "neliquid": 0.0, "neliquid_items": []}], "specialists": [{"name": "Артюхина Виктория Алексеевна", "norm": 2800.0, "total": 3111.0, "pct": 1.1111}, {"name": "Назаркин Иван Сергеевич", "norm": 2000.0, "total": 2042.0, "pct": 1.021}, {"name": "Васильева Оксана Игоревна", "norm": 1600.0, "total": 2022.0, "pct": 1.2637}, {"name": "Ягуш Наталья Сергеевна", "norm": 2000.0, "total": 1847.0, "pct": 0.9235}, {"name": "Артюхина Татьяна Владимировна", "norm": 1600.0, "total": 1641.0, "pct": 1.0256}, {"name": "Зубрилина Олеся Александровна", "norm": 2000.0, "total": 1093.0, "pct": 0.5465}, {"name": "Гречищев Владислав Геннадьевич", "norm": 2800.0, "total": 655.0, "pct": 0.2339}], "self_entry": [{"name": "Мыльников Алексей Владимирович", "total": 3667, "own": 1705, "pct": 0.465}, {"name": "Томилина София Сергеевна", "total": 1910, "own": 401, "pct": 0.2099}, {"name": "Акуярви Анна Васильевна", "total": 645, "own": 630, "pct": 0.9767}, {"name": "Исаева Альбина Асалиевна", "total": 1569, "own": 643, "pct": 0.4098}, {"name": "Калинина Надежда Михайловна", "total": 2481, "own": 385, "pct": 0.1552}, {"name": "Земчихина Мария Владимировна", "total": 2285, "own": 2044, "pct": 0.8945}, {"name": "Илюшин Олег Александрович", "total": 7536, "own": 4234, "pct": 0.5618}, {"name": "Филина Алена Алексеевна", "total": 6098, "own": 1909, "pct": 0.3131}, {"name": "Ефимова Анна Сергеевна", "total": 2484, "own": 271, "pct": 0.1091}, {"name": "Соснов Владислав Валериевич", "total": 1958, "own": 747, "pct": 0.3815}, {"name": "Шаврова Светлана Евгеньевна", "total": 2354, "own": 595, "pct": 0.2528}, {"name": "Евсикова Дарья Юрьевна", "total": 615, "own": 255, "pct": 0.4146}], "days_fact": 21, "days_plan": 21, "neliquid_recent": [{"code": "1645401", "name": "Скоба крепежная однолапковая d40мм метал. Ruvinil С01340", "qty": 20.0, "price": 9.62, "cost": 192.41, "warehouse": "ЦС Тула", "date": "02.09.2026", "batch": "31R43063839", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Илюшин Олег Александрович"}, {"code": "1214918", "name": "Трансформатор тока ТТК-А 300/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239697", "qty": 15.0, "price": 1034.36, "cost": 15515.34, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043273", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Акуярви Анна Васильевна"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 1.0, "price": 1193.15, "cost": 1193.15, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43038830", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Акуярви Анна Васильевна"}, {"code": "1214920", "name": "Трансформатор тока ТТК-А 500/5А кл. точн. 0.5S 5В.А УХЛ3 КЭАЗ 239712", "qty": 2.0, "price": 1193.15, "cost": 2386.3, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43040717", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Акуярви Анна Васильевна"}, {"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 24.0, "price": 1069.52, "cost": 25668.47, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43042207", "zone": "206", "zone_name": "Склад прочего товара (коробки)", "manager": "Акуярви Анна Васильевна"}, {"code": "328772", "name": "Трансформатор тока ТТК-А 100/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219655", "qty": 180.0, "price": 1069.52, "cost": 192513.55, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43043395", "zone": "200", "zone_name": "Склад паллетного хранения", "manager": "Акуярви Анна Васильевна"}, {"code": "328779", "name": "Трансформатор тока ТТК-А 150/5А кл. точн. 0.5S 5В.А измерительный УХЛ3 КЭАЗ 219659", "qty": 108.0, "price": 1040.75, "cost": 112400.83, "warehouse": "ЦС Тула", "date": "31.08.2026", "batch": "31R43041064", "zone": "200", "zone_name": "Склад паллетного хранения", "manager": "Акуярви Анна Васильевна"}, {"code": "2020727", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлЖК желт. карри IEK FI-M12-31-20-K44", "qty": 10.0, "price": 50.22, "cost": 502.15, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43010900", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "2020738", "name": "Рамка 1-м СП FLITE РУ-1-А-ФлФ фисташк. IEK FI-M12-31-20-K93", "qty": 20.0, "price": 50.22, "cost": 1004.3, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43011442", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "1646069", "name": "Паяльник 90 201 OSE-Pes05-100W-KP дерево; конус прямой ОНЛАЙТ 90201", "qty": 1.0, "price": 186.22, "cost": 186.22, "warehouse": "ЦС Тула", "date": "28.08.2026", "batch": "31R43013987", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Илюшин Олег Александрович"}, {"code": "2038649", "name": "Вывод кабеля СП ZIMA IP20 механизм бел. LEZARD 704-0288-197", "qty": 2.0, "price": 154.67, "cost": 309.34, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996327", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 1.0, "price": 201.37, "cost": 201.37, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996574", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "2038650", "name": "Вывод кабеля СП ZIMA IP20 механизм сер. матов. LEZARD 704-7488-197", "qty": 2.0, "price": 201.37, "cost": 402.75, "warehouse": "ЦС Тула", "date": "27.08.2026", "batch": "31R42996576", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "1365949", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой черн. (уп.25м) DKC 7172025", "qty": 1.0, "price": 587.34, "cost": 587.34, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955371", "zone": "206", "zone_name": "Склад прочего товара (коробки)", "manager": "Илюшин Олег Александрович"}, {"code": "1365954", "name": "Труба гофрированная ПНД гибкая легкая d20мм с протяжкой оранж. (уп.50м) DKC 7192050", "qty": 1.0, "price": 1098.46, "cost": 1098.46, "warehouse": "ЦС Тула", "date": "24.08.2026", "batch": "31R42955367", "zone": "206", "zone_name": "Склад прочего товара (коробки)", "manager": "Илюшин Олег Александрович"}, {"code": "222729", "name": "Выключатель автоматический модульный 2п D 25А 4.5кА ВА47-29 KARAT IEK MVA20-2-025-D", "qty": 1.0, "price": 489.97, "cost": 489.97, "warehouse": "ЦС Тула", "date": "21.08.2026", "batch": "31R42928432", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Филина Алена Алексеевна"}, {"code": "1446559", "name": "Вязка спиральная немагнитная ВСн 70/95.2 МЗВА 00000010293", "qty": 120.0, "price": 201.8, "cost": 24215.51, "warehouse": "ЦС Москва", "date": "20.08.2026", "batch": "77R42917655", "zone": "206", "zone_name": "Склад прочего товара (коробки)", "manager": "Калинина Надежда Михайловна"}, {"code": "384885", "name": "Разъединитель высоковольтный РВЗ 10/630 II УХЛ2 (с приводом) КЭАЗ 142373", "qty": 1.0, "price": 20923.34, "cost": 20923.34, "warehouse": "ЦС Тула", "date": "17.08.2026", "batch": "31R42868250", "zone": "200", "zone_name": "Склад паллетного хранения", "manager": "Мыльников Алексей Владимирович"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 10.0, "price": 644.98, "cost": 6449.84, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834402", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998221", "name": "Светильник настольный FITO-20W-АLED-Ra-USB 20Вт для растений полного спектра черн. Эра Б0068236", "qty": 9.0, "price": 644.98, "cost": 5804.85, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41214920", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 9.0, "price": 891.58, "cost": 8024.18, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40830801", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 1.0, "price": 891.58, "cost": 891.58, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40831126", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998222", "name": "Светильник настольный FITO-40W-АLED-Ra-USB 40Вт для растений полного спектра черн. Эра Б0068290", "qty": 8.0, "price": 891.58, "cost": 7132.61, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213643", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 10.0, "price": 646.9, "cost": 6469.05, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834299", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1998230", "name": "Светильник FITO-20W-АLED-RB 20Вт на прищепке для растений красн./син. спектра Эра Б0068275", "qty": 9.0, "price": 646.9, "cost": 5822.15, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213337", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "2061275", "name": "Светильник светодиодный (фитолампа) FITO-24W-Ra90 24Вт IP20 линейный для растений полного спектра Эра Б0069717", "qty": 4.0, "price": 590.54, "cost": 2362.16, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41206719", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "2061280", "name": "Прожектор светодиодный GREEN LINE FITO-200W-Ra90-LED-Y-GR 200Вт 4800-5000К IP65 для растений полного спектра Эра Б0069870", "qty": 10.0, "price": 1114.47, "cost": 11144.7, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41218544", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "2061284", "name": "Лампа светодиодная FITO-20W-RB-E27 20Вт грушевидная прозрачная 1300К красн./син. спектра E27 130-270В для растений Эра Б0069710", "qty": 4.0, "price": 110.17, "cost": 440.66, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R41213245", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1901702", "name": "Шина PEN земля-ноль 6х9мм 8/1 никелированная с креплениями по центру NO-224-79 Эра Б0062870", "qty": 10.0, "price": 63.41, "cost": 634.1, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834580", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1931433", "name": "Рамка 4-м СП Accent 6-504-05 антрацит Intro Б0063710", "qty": 2.0, "price": 113.21, "cost": 226.43, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40834715", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1810925", "name": "Колодка удлинителя 2-м с заземл. черн. KX-2e-B Эра Б0061711", "qty": 10.0, "price": 101.84, "cost": 1018.39, "warehouse": "ЦС Тула", "date": "06.08.2026", "batch": "31R40833493", "zone": "222", "zone_name": "Склад приёмки с ЦС", "manager": "Филина Алена Алексеевна"}, {"code": "1036635", "name": "Наконечник НШВИ(2) 0.5-8 оранж. (уп.20шт) IEK UTE10-4-D1-8-100", "qty": 10.0, "price": 46.69, "cost": 466.88, "warehouse": "ЦС Тула", "date": "03.08.2026", "batch": "31R42703916", "zone": "510", "zone_name": "Склад импортного товара", "manager": "Мыльников Алексей Владимирович"}]}, "generated_days": {"fact": 21, "plan": 21}};
 
-const fmtRub = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(Math.round(n)) + ' \u20BD';
-const fmtPct = n => (n*100).toFixed(1).replace('.', ',') + '%';
+/* ==================== ОБЩИЕ ХЕЛПЕРЫ ==================== */
+const fmtRub = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(Math.round(n||0)) + ' \u20BD';
+const fmtPct = n => ((n||0)*100).toFixed(1).replace('.', ',') + '%';
+const fmtInt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n||0));
 
 function statusColor(dyn){
   if (dyn >= 1.0) return {c:'var(--green)', bg:'var(--green-dim)'};
   if (dyn >= 0.7) return {c:'var(--amber)', bg:'var(--amber-dim)'};
   return {c:'var(--red)', bg:'var(--red-dim)'};
 }
+function selfEntryColor(pct){
+  if (pct <= 0.2) return {c:'var(--green)', bg:'var(--green-dim)'};
+  if (pct <= 0.5) return {c:'var(--amber)', bg:'var(--amber-dim)'};
+  return {c:'var(--red)', bg:'var(--red-dim)'};
+}
 
-// ---- доля прошедшего времени (выведена из данных: pct/dyn, константа по всем строкам) ----
-const elapsedFrac = DATA.rows.reduce((s,r)=>s+r.pct/r.dyn,0)/DATA.rows.length;
-
-// ---- дата снимка (по среднему elapsed, относительно квартала 01.07-30.09.2026) ----
-(function(){
-  const start = new Date('2026-07-01T00:00:00');
-  const end = new Date('2026-09-30T00:00:00');
-  const snap = new Date(start.getTime() + elapsedFrac*(end.getTime()-start.getTime()));
-  document.getElementById('snapTime').textContent = snap.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
-})();
-
-// ---- аватары-заглушки: детерминированное животное на менеджера (до появления реальных фото) ----
 const ANIMALS = ['\u{1F98A}','\u{1F43C}','\u{1F981}','\u{1F42F}','\u{1F428}','\u{1F430}','\u{1F989}','\u{1F43A}','\u{1F985}','\u{1F438}','\u{1F422}','\u{1F984}','\u{1F417}','\u{1F99D}','\u{1F43B}','\u{1F993}'];
 function animalFor(name){
   let h = 0;
@@ -406,7 +509,7 @@ function avatarHTML(m){
   return animalFor(m.name);
 }
 function shortName(fio){
-  const parts = fio.trim().split(/\s+/);
+  const parts = (fio||'').trim().split(/\s+/);
   return parts.length >= 2 ? `${parts[0]} ${parts[1]}` : fio;
 }
 function sectorShort(sector){
@@ -414,10 +517,157 @@ function sectorShort(sector){
   const m = sector.match(/Сектор\s+(.+)/i);
   return m ? m[1] : sector;
 }
-function chevronSVG(){
-  return `<svg class="chev" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function chevronSVG(cls){
+  return `<svg class="${cls||'chev'}" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function gaugeSVG(pct, color){
+  const r = 30, c = 2*Math.PI*r, off = c*(1-Math.min(pct,1));
+  return `<svg width="72" height="72" viewBox="0 0 72 72">
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="#252B36" stroke-width="7"/>
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="${color}" stroke-width="7"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
+      transform="rotate(-90 36 36)"/>
+  </svg>`;
 }
 
+/* ---- доля прошедшего времени квартала (для вкладки "ТОП-бренды") ---- */
+const elapsedFrac = DATA.brands.rows.length
+  ? DATA.brands.rows.reduce((s,r)=>s+r.pct/(r.dyn||1),0)/DATA.brands.rows.length
+  : 0.5;
+(function(){
+  const start = new Date('2026-07-01T00:00:00');
+  const end = new Date('2026-09-30T00:00:00');
+  const snap = new Date(start.getTime() + elapsedFrac*(end.getTime()-start.getTime()));
+  document.getElementById('snapTime').textContent = snap.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+})();
+
+/* ==================== ВКЛАДКИ: переключение ==================== */
+const TAB_META = {
+  managers: {title:'Показатели менеджеров', sub: () => `Август 2026 \u00b7 ${DATA.generated_days.fact} из ${DATA.generated_days.plan} рабочих дней`},
+  brands: {title:'Выполнение плана продаж по брендам', sub: () => '3 квартал 2026 \u00b7 период 01.07.2026 \u2013 30.09.2026'},
+  akb: {title:'АКБ', sub: () => `Август 2026 \u00b7 ${DATA.generated_days.fact} из ${DATA.generated_days.plan} рабочих дней`},
+  neliq: {title:'Неликвиды', sub: () => 'Остатки неликвидной продукции \u2014 снимок на дату отчёта'},
+  specialists: {title:'Специалисты', sub: () => `Август 2026 \u00b7 ${DATA.generated_days.fact} из ${DATA.generated_days.plan} рабочих дней`},
+};
+const FOOTERS = {
+  managers: 'Динамика = % выполнения \u00d7 (плановые рабочие дни месяца / фактически прошедшие). 100% значит темп ровно по графику месяца. Данные и методика расчёта \u2014 лист «KPI».',
+  brands: '<b>Методика:</b> «Темп» = % выполнения \u00f7 доля прошедшего времени квартала (лист «Бренды», столбец «Динамика»). 100% \u2014 точно по графику. В турнирной таблице \u2014 только действующие сотрудники, сумма может быть меньше факта бренда.',
+  akb: 'Наценка, ПДЗ, количество клиентов и артикулов \u2014 лист «KPI», в разрезе по каждому менеджеру.',
+  neliq: 'Расчёт идентичен листу «KPI»: зона склада «555» (потерянный товар) в суммы не включается. «Новые неликвиды за 30 дней» \u2014 по столбцу «Дата присвоения партии статуса Неликвид», наведите курсор на строку, чтобы подсветить ответственного менеджера ниже. Источник \u2014 лист «Остатки неликвидов».',
+  specialists: 'Норматив строк и выработка \u2014 лист «KPI». Для менеджеров ниже % самонабивки \u2014 лучше (больше строк передано специалистам).',
+};
+function updateChrome(tab){
+  const meta = TAB_META[tab];
+  document.getElementById('pageTitle').textContent = meta.title;
+  document.getElementById('pageSub').textContent = meta.sub();
+  document.getElementById('pageFooter').innerHTML = FOOTERS[tab];
+}
+function switchTab(tab){
+  document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  updateChrome(tab);
+}
+document.getElementById('tabbar').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  switchTab(btn.dataset.tab);
+});
+
+/* ==================== ВКЛАДКА 1: МЕНЕДЖЕРЫ ==================== */
+function renderManagerTribute(m, idx){
+  const sShip = statusColor(m.dyn);
+  const sVd = statusColor(m.vd_dyn);
+  const wShip = Math.min((m.pct||0)*100, 100);
+  const wVd = Math.min((m.vd_pct||0)*100, 100);
+  const rc = idx===0?'gold':idx===1?'silver':idx===2?'bronze':'';
+  return `
+    <div class="mtribute rank-${idx+1<=3?idx+1:'x'}">
+      <div class="tribute-rank ${rc}">${idx+1}</div>
+      <div class="tribute-avatar ${rc}">${avatarHTML(m)}</div>
+      <div class="tribute-name" style="flex:1 1 170px; min-width:150px;">
+        <div class="nm">${shortName(m.name)}${idx===0?'<span class="fire">\u{1F525}</span>':''}</div>
+        <div class="sec">${m.position||''}</div>
+      </div>
+      <div class="metric-group">
+        <div class="mg-label">Отгрузка</div>
+        <div class="mg-fact">${fmtRub(m.fact)}</div>
+        <div class="mg-bottom">
+          <div class="mini-gauge"><i style="width:${wShip}%; --c:${sShip.c}"></i></div>
+          <div class="mg-pct" style="--c:${sShip.c}">${fmtPct(m.pct)}</div>
+          <span class="dyn-badge" style="--c:${sShip.c}; --bgc:${sShip.bg}">${fmtPct(m.dyn)}</span>
+        </div>
+      </div>
+      <div class="metric-group">
+        <div class="mg-label">ВД</div>
+        <div class="mg-fact">${fmtRub(m.vd_fact)}</div>
+        <div class="mg-bottom">
+          <div class="mini-gauge"><i style="width:${wVd}%; --c:${sVd.c}"></i></div>
+          <div class="mg-pct" style="--c:${sVd.c}">${fmtPct(m.vd_pct)}</div>
+          <span class="dyn-badge" style="--c:${sVd.c}; --bgc:${sVd.bg}">${fmtPct(m.vd_dyn)}</span>
+        </div>
+      </div>
+      <div class="mrow-markup"><div class="lbl">Наценка</div><div class="val">${fmtPct(m.markup)}</div></div>
+    </div>`;
+}
+
+function renderManagersTab(){
+  const b = DATA.kpi.branch || {};
+  const sShip = statusColor(b.dyn);
+  const sVd = statusColor(b.vd_dyn);
+
+  document.getElementById('mgrKpiShip').innerHTML = `
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Отгрузка, план</div><div class="kpi-val">${fmtRub(b.plan)}</div><div class="kpi-sub">филиал</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Отгрузка, факт</div><div class="kpi-val">${fmtRub(b.fact)}</div><div class="kpi-sub">на снимок</div></div>
+    <div class="kpi" style="--kc:${sShip.c}"><div class="kpi-label">% выполнения</div><div class="kpi-val" style="color:${sShip.c}">${fmtPct(b.pct)}</div><div class="kpi-sub">факт / план</div></div>
+    <div class="kpi" style="--kc:${sShip.c}"><div class="kpi-label">Динамика по отгрузке</div><div class="kpi-val" style="color:${sShip.c}">${fmtPct(b.dyn)}</div><div class="kpi-sub">темп к графику месяца</div></div>
+  `;
+  document.getElementById('mgrKpiVd').innerHTML = `
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">ВД, план</div><div class="kpi-val">${fmtRub(b.vd_plan)}</div><div class="kpi-sub">филиал</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">ВД, факт</div><div class="kpi-val">${fmtRub(b.vd_fact)}</div><div class="kpi-sub">на снимок</div></div>
+    <div class="kpi" style="--kc:${sVd.c}"><div class="kpi-label">% выполнения ВД</div><div class="kpi-val" style="color:${sVd.c}">${fmtPct(b.vd_pct)}</div><div class="kpi-sub">факт / план</div></div>
+    <div class="kpi" style="--kc:${sVd.c}"><div class="kpi-label">Динамика по ВД</div><div class="kpi-val" style="color:${sVd.c}">${fmtPct(b.vd_dyn)}</div><div class="kpi-sub">темп к графику месяца</div></div>
+    <div class="kpi" style="--kc:var(--amber)"><div class="kpi-label">Наценка</div><div class="kpi-val">${fmtPct(b.markup)}</div><div class="kpi-sub">филиал</div></div>
+  `;
+
+  const board = document.getElementById('sectorBoard');
+  board.innerHTML = (DATA.kpi.sectors||[]).map(s=>{
+    const sShipS = statusColor(s.dyn);
+    const sVdS = statusColor(s.vd_dyn);
+    const wShip = Math.min((s.pct||0)*100,100);
+    const wVd = Math.min((s.vd_pct||0)*100,100);
+    const mgrsHtml = (s.managers||[]).map((m,mi)=>renderManagerTribute(m,mi)).join('');
+    const safeKey = s.key.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_');
+    return `
+    <div class="mrow" data-sector="${safeKey}">
+      <div class="led" style="--c:${sShipS.c}"></div>
+      <div class="mname"><div class="tier">СЕКТОР</div><div class="nm">${s.key}</div></div>
+      <div class="metric-group">
+        <div class="mg-label">Отгрузка</div>
+        <div class="mg-fact">${fmtRub(s.fact)}<span class="mg-plan">/ ${fmtRub(s.plan)}</span></div>
+        <div class="mg-bottom"><div class="mini-gauge"><i style="width:${wShip}%; --c:${sShipS.c}"></i></div><div class="mg-pct" style="--c:${sShipS.c}">${fmtPct(s.pct)}</div></div>
+      </div>
+      <div class="metric-group">
+        <div class="mg-label">ВД</div>
+        <div class="mg-fact">${fmtRub(s.vd_fact)}<span class="mg-plan">/ ${fmtRub(s.vd_plan)}</span></div>
+        <div class="mg-bottom"><div class="mini-gauge"><i style="width:${wVd}%; --c:${sVdS.c}"></i></div><div class="mg-pct" style="--c:${sVdS.c}">${fmtPct(s.vd_pct)}</div></div>
+      </div>
+      <div class="mrow-markup"><div class="lbl">Наценка</div><div class="val">${fmtPct(s.markup)}</div></div>
+      <div class="mrow-dyn"><div class="lbl">Темп</div><span class="dyn-badge" style="--c:${sShipS.c}; --bgc:${sShipS.bg}">${fmtPct(s.dyn)}</span></div>
+      ${chevronSVG()}
+    </div>
+    <div class="mpanel" data-panel="${safeKey}"><div class="mpanel-inner">${mgrsHtml}</div></div>`;
+  }).join('');
+}
+document.getElementById('sectorBoard').addEventListener('click', e=>{
+  const row = e.target.closest('.mrow'); if(!row) return;
+  const key = row.dataset.sector;
+  const panel = document.querySelector(`#sectorBoard .mpanel[data-panel="${CSS.escape(key)}"]`);
+  const willOpen = !row.classList.contains('open');
+  row.classList.toggle('open', willOpen);
+  panel.classList.toggle('open', willOpen);
+});
+
+/* ==================== ВКЛАДКА 2: ТОП-БРЕНДЫ ==================== */
 function renderLeaderboard(row){
   if (!row.managers || !row.managers.length) return '';
   const rankClass = i => i===0?'gold':i===1?'silver':i===2?'bronze':'';
@@ -456,107 +706,62 @@ function renderLeaderboard(row){
     </div>`;
 }
 
-// ================= KPI =================
-const t = DATA.totals;
-const overallDyn = (t.fact/t.plan)/elapsedFrac;
-const kpiRow = document.getElementById('kpiRow');
-
-function gaugeSVG(pct, color){
-  const r = 30, c = 2*Math.PI*r, off = c*(1-Math.min(pct,1));
-  return `<svg width="72" height="72" viewBox="0 0 72 72">
-    <circle cx="36" cy="36" r="${r}" fill="none" stroke="#252B36" stroke-width="7"/>
-    <circle cx="36" cy="36" r="${r}" fill="none" stroke="${color}" stroke-width="7"
-      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
-      transform="rotate(-90 36 36)"/>
-  </svg>`;
+const kpiRowEl = document.getElementById('kpiRow');
+function renderBrandsKpi(){
+  const t = DATA.brands.totals;
+  const overallDyn = t.plan ? (t.fact/t.plan)/elapsedFrac : 0;
+  const s = statusColor(overallDyn);
+  kpiRowEl.innerHTML = `
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">План, 3 кв.</div><div class="kpi-val">${fmtRub(t.plan)}</div><div class="kpi-sub">23 бренда</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Факт, 3 кв.</div><div class="kpi-val">${fmtRub(t.fact)}</div><div class="kpi-sub">отгружено на снимок</div></div>
+    <div class="kpi" style="--kc:var(--amber)"><div class="kpi-label">% выполнения</div>
+      <div class="kpi-gauge">${gaugeSVG(t.plan?t.fact/t.plan:0, 'var(--amber)')}<div><div class="gtext">${fmtPct(t.plan?t.fact/t.plan:0)}</div><div class="kpi-sub">факт / план</div></div></div>
+    </div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kpi-label">Дефицит</div><div class="kpi-val" style="color:var(--red)">${fmtRub(t.deficit)}</div><div class="kpi-sub">не довыполнено</div></div>
+    <div class="kpi" style="--kc:${s.c}"><div class="kpi-label">Темп к графику</div><div class="kpi-val" style="color:${s.c}">${fmtPct(overallDyn)}</div><div class="kpi-sub">100% = точно по графику</div></div>
+  `;
 }
 
-kpiRow.innerHTML = `
-  <div class="kpi" style="--kc:var(--ink-dim)">
-    <div class="kpi-label">План, 3 кв.</div>
-    <div class="kpi-val">${fmtRub(t.plan)}</div>
-    <div class="kpi-sub">23 бренда</div>
-  </div>
-  <div class="kpi" style="--kc:var(--ink-dim)">
-    <div class="kpi-label">Факт, 3 кв.</div>
-    <div class="kpi-val">${fmtRub(t.fact)}</div>
-    <div class="kpi-sub">отгружено на снимок</div>
-  </div>
-  <div class="kpi" style="--kc:var(--amber)">
-    <div class="kpi-label">% выполнения</div>
-    <div class="kpi-gauge">
-      ${gaugeSVG(t.pct, 'var(--amber)')}
-      <div><div class="gtext">${fmtPct(t.pct)}</div><div class="kpi-sub">факт / план</div></div>
-    </div>
-  </div>
-  <div class="kpi" style="--kc:var(--red)">
-    <div class="kpi-label">Дефицит</div>
-    <div class="kpi-val" style="color:var(--red)">${fmtRub(t.deficit)}</div>
-    <div class="kpi-sub">не довыполнено</div>
-  </div>
-  <div class="kpi" style="--kc:${overallDyn>=1?'var(--green)':overallDyn>=0.7?'var(--amber)':'var(--red)'}">
-    <div class="kpi-label">Темп к графику</div>
-    <div class="kpi-val" style="color:${overallDyn>=1?'var(--green)':overallDyn>=0.7?'var(--amber)':'var(--red)'}">${fmtPct(overallDyn)}</div>
-    <div class="kpi-sub">100% = точно по графику</div>
-  </div>
-`;
-
-// ================= Rows =================
 const rowsEl = document.getElementById('rows');
 const cntEl = document.getElementById('cnt');
 let tierFilter = 'all';
 let sortMode = 'pct_desc';
 const openBrands = new Set();
 
-function render(){
-  let items = DATA.rows.filter(r => tierFilter==='all' || r.tier===tierFilter);
+function renderBrandRows(){
+  let items = DATA.brands.rows.filter(r => tierFilter==='all' || r.tier===tierFilter);
   const sorters = {
-    pct_desc: (a,b)=>b.pct-a.pct,
-    pct_asc: (a,b)=>a.pct-b.pct,
-    deficit_desc: (a,b)=>b.deficit-a.deficit,
-    plan_desc: (a,b)=>b.plan-a.plan,
-    dyn_asc: (a,b)=>a.dyn-b.dyn,
-    az: (a,b)=>a.brand.localeCompare(b.brand,'ru'),
+    pct_desc: (a,b)=>b.pct-a.pct, pct_asc: (a,b)=>a.pct-b.pct,
+    deficit_desc: (a,b)=>b.deficit-a.deficit, plan_desc: (a,b)=>b.plan-a.plan,
+    dyn_asc: (a,b)=>a.dyn-b.dyn, az: (a,b)=>a.brand.localeCompare(b.brand,'ru'),
   };
   items = items.slice().sort(sorters[sortMode]);
-  cntEl.textContent = `${items.length} из ${DATA.rows.length}`;
+  cntEl.textContent = `${items.length} из ${DATA.brands.rows.length}`;
 
   rowsEl.innerHTML = items.map(r=>{
     const s = statusColor(r.dyn);
-    const pctW = Math.min(r.pct*100, 100);
+    const pctW = Math.min((r.pct||0)*100, 100);
     const hasMgr = r.managers && r.managers.length > 0;
     const isOpen = hasMgr && openBrands.has(r.full);
     return `
     <div class="row ${hasMgr?'':'no-mgr'} ${isOpen?'open':''}" data-brand="${r.full}">
       <div class="led" style="--c:${s.c}"></div>
-      <div class="name-cell">
-        <div class="tier">${r.tier || '—'}</div>
-        <div class="nm" title="${r.full}">${r.brand}</div>
-      </div>
+      <div class="name-cell"><div class="tier">${r.tier || '\u2014'}</div><div class="nm" title="${r.full}">${r.brand}</div></div>
       <div class="num-cell">
         <div class="num-line"><span class="lbl">План</span>${fmtRub(r.plan)}</div>
         <div class="num-line"><span class="lbl">Факт</span>${fmtRub(r.fact)}</div>
       </div>
-      <div class="deficit-cell">
-        <div class="deficit-value">${fmtRub(r.deficit)}</div>
-        <div class="deficit-spacer"></div>
-      </div>
+      <div class="deficit-cell"><div class="deficit-value">${fmtRub(r.deficit)}</div><div class="deficit-spacer"></div></div>
       <div class="gauge-cell">
-        <div class="gauge-track">
-          <div class="gauge-fill" style="width:${pctW}%; --c:${s.c}"></div>
-          <div class="gauge-target" style="left:${elapsedFrac*100}%"></div>
-        </div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:${pctW}%; --c:${s.c}"></div><div class="gauge-target" style="left:${elapsedFrac*100}%"></div></div>
         <div class="gauge-pct" style="--c:${s.c}">${fmtPct(r.pct)}</div>
       </div>
-      <div class="dyn-cell">
-        <span class="dyn-badge" style="--c:${s.c}; --bgc:${s.bg}">${fmtPct(r.dyn)}</span>
-      </div>
+      <div class="dyn-cell"><span class="dyn-badge" style="--c:${s.c}; --bgc:${s.bg}">${fmtPct(r.dyn)}</span></div>
       ${chevronSVG()}
     </div>
     <div class="leaderboard-panel ${isOpen?'open':''}" data-panel="${r.full}">${renderLeaderboard(r)}</div>`;
   }).join('');
 }
-
 rowsEl.addEventListener('click', e=>{
   const row = e.target.closest('.row');
   if (!row || row.classList.contains('no-mgr')) return;
@@ -567,19 +772,219 @@ rowsEl.addEventListener('click', e=>{
   panel.classList.toggle('open', willOpen);
   if (willOpen) openBrands.add(brand); else openBrands.delete(brand);
 });
-
 document.getElementById('tierSeg').addEventListener('click', e=>{
   const btn = e.target.closest('button'); if(!btn) return;
   document.querySelectorAll('#tierSeg button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   tierFilter = btn.dataset.tier;
-  render();
+  renderBrandRows();
 });
-document.getElementById('sortSel').addEventListener('change', e=>{
-  sortMode = e.target.value; render();
+document.getElementById('sortSel').addEventListener('change', e=>{ sortMode = e.target.value; renderBrandRows(); });
+
+/* ==================== ВКЛАДКА 3: АКБ ==================== */
+let akbSort = 'pdz_desc';
+function renderAkbRow(m){
+  return `
+    <div class="mrow" style="cursor:default;">
+      <div class="mname" style="min-width:210px;"><div class="tier">${m.sector_key||''}</div><div class="nm">${shortName(m.name)}</div></div>
+      <div class="metric-group"><div class="mg-label">Наценка</div><div class="mg-fact">${fmtPct(m.markup)}</div></div>
+      <div class="metric-group"><div class="mg-label">ПДЗ &gt;0</div><div class="mg-fact" style="${m.pdz>0?'color:var(--red)':''}">${fmtRub(m.pdz)}</div></div>
+      <div class="metric-group"><div class="mg-label">Кол-во клиентов</div><div class="mg-fact">${fmtInt(m.clients)}</div></div>
+      <div class="metric-group"><div class="mg-label">Кол-во артикулов</div><div class="mg-fact">${fmtInt(m.articles)}</div></div>
+    </div>`;
+}
+function akbRender(){
+  const sorters = {
+    pdz_desc:(a,b)=>b.pdz-a.pdz, markup_desc:(a,b)=>b.markup-a.markup,
+    clients_desc:(a,b)=>b.clients-a.clients, articles_desc:(a,b)=>b.articles-a.articles,
+    az:(a,b)=>a.name.localeCompare(b.name,'ru'),
+  };
+  const items = DATA.kpi.managers.slice().sort(sorters[akbSort]);
+  document.getElementById('akbBoard').innerHTML = items.map(renderAkbRow).join('');
+}
+function renderAkbTab(){
+  const b = DATA.kpi.branch || {};
+  document.getElementById('akbKpi').innerHTML = `
+    <div class="kpi" style="--kc:var(--amber)"><div class="kpi-label">Наценка</div><div class="kpi-val">${fmtPct(b.markup)}</div><div class="kpi-sub">филиал</div></div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kpi-label">ПДЗ &gt;0</div><div class="kpi-val" style="color:var(--red)">${fmtRub(b.pdz)}</div><div class="kpi-sub">просрочка</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Кол-во клиентов</div><div class="kpi-val">${fmtInt(b.clients)}</div><div class="kpi-sub">филиал</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Кол-во артикулов</div><div class="kpi-val">${fmtInt(b.articles)}</div><div class="kpi-sub">филиал</div></div>
+  `;
+  akbRender();
+}
+document.getElementById('akbSortSel').addEventListener('change', e=>{ akbSort = e.target.value; akbRender(); });
+
+/* ==================== ВКЛАДКА 4: НЕЛИКВИДЫ ==================== */
+function copyIconSVG(code){
+  return `<svg class="ni-copy" data-code="${code}" viewBox="0 0 16 16" fill="none">
+    <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M3 10V3.5C3 2.67157 3.67157 2 4.5 2H10" stroke="currentColor" stroke-width="1.3"/>
+  </svg>`;
+}
+function renderNeliqItem(it, mi, ii){
+  return `
+  <div class="neliq-item" data-item="${mi}-${ii}">
+    <span class="ni-code">${it.code}${copyIconSVG(it.code)}</span>
+    <span class="ni-name" title="${it.name}">${it.name}</span>
+    <span class="ni-qty">${fmtInt(it.qty)}</span>
+    <span class="ni-price">${fmtRub(it.price)}</span>
+    <span class="ni-cost">${fmtRub(it.cost)}</span>
+    <span class="ni-wh" title="${it.warehouse}">${it.warehouse}</span>
+    <span class="ni-date">${it.date}</span>
+    ${chevronSVG('ni-chev')}
+  </div>
+  <div class="neliq-detail" data-detail="${mi}-${ii}">
+    <div class="neliq-detail-inner"><span>Партия: <b>${it.batch}</b></span><span>Зона: <b>${it.zone}${it.zone_name?' '+it.zone_name:''}</b></span></div>
+  </div>`;
+}
+function renderNeliqManagerRow(m, idx){
+  const items = m.neliquid_items || [];
+  const hasItems = items.length > 0;
+  const isZero = (m.neliquid||0) === 0;
+  const itemsHtml = items.map((it,ii)=>renderNeliqItem(it, idx, ii)).join('');
+  return `
+  <div class="mrow ${hasItems?'':'no-mgr'}" data-mgr="${idx}" data-name="${m.name}">
+    <div class="mname" style="min-width:220px;"><div class="tier">${m.sector_key||''}</div><div class="nm">${shortName(m.name)}</div></div>
+    <div style="flex:1 1 auto;"></div>
+    ${isZero ? '<span class="zero-badge">\u2705 МОЛОДЕЦ</span>' : `<div class="mg-fact" style="color:var(--red); font-size:15px;">${fmtRub(m.neliquid)}</div>`}
+    ${hasItems ? chevronSVG() : ''}
+  </div>
+  <div class="mpanel" data-panel="n${idx}"><div class="mpanel-inner">
+    ${hasItems ? `<div class="neliq-hdr"><span>Код</span><span>Наименование</span><span>Кол-во</span><span>Цена</span><span>Стоимость</span><span>Склад</span><span>Дата</span></div>` : ''}
+    ${itemsHtml}
+  </div></div>`;
+}
+
+function renderRecentNeliqItem(it){
+  return `
+  <div class="neliq-item no-toggle" data-owner="${it.manager}" style="cursor:default;" title="Ответственный: ${it.manager}">
+    <span class="ni-code">${it.code}${copyIconSVG(it.code)}</span>
+    <span class="ni-name">${it.name}</span>
+    <span class="ni-qty">${fmtInt(it.qty)}</span>
+    <span class="ni-price">${fmtRub(it.price)}</span>
+    <span class="ni-cost">${fmtRub(it.cost)}</span>
+    <span class="ni-wh">${it.warehouse}</span>
+    <span class="ni-date">${it.date}</span>
+  </div>`;
+}
+function renderRecentNeliqBlock(){
+  const items = DATA.kpi.neliquid_recent || [];
+  document.getElementById('neliqRecentTitle').textContent =
+    `Новые неликвиды за последние 30 дней \u00b7 ${items.length} позиций`;
+  const board = document.getElementById('neliqRecentBoard');
+  if (!items.length){
+    board.innerHTML = `<div style="padding:16px 18px; color:var(--ink-faint); font-size:13px;">За последние 30 дней новых неликвидов не образовано.</div>`;
+    return;
+  }
+  board.innerHTML = `
+    <div class="neliq-hdr" style="padding:10px 18px;"><span>Код</span><span>Наименование</span><span>Кол-во</span><span>Цена</span><span>Стоимость</span><span>Склад</span><span>Дата</span></div>
+    <div style="padding:4px 8px 8px;">${items.map(renderRecentNeliqItem).join('')}</div>`;
+  board.querySelectorAll('.neliq-item[data-owner]').forEach(el=>{
+    el.addEventListener('mouseenter', ()=>{
+      const row = document.querySelector(`#neliqBoard .mrow[data-name="${CSS.escape(el.dataset.owner)}"]`);
+      if (row) row.classList.add('highlight');
+    });
+    el.addEventListener('mouseleave', ()=>{
+      const row = document.querySelector(`#neliqBoard .mrow[data-name="${CSS.escape(el.dataset.owner)}"]`);
+      if (row) row.classList.remove('highlight');
+    });
+  });
+  board.querySelectorAll('.ni-copy').forEach(btn=>{
+    btn.addEventListener('click', e=>{ e.stopPropagation(); copyToClipboard(btn); });
+  });
+}
+
+function copyToClipboard(btn){
+  const code = btn.dataset.code;
+  const done = () => {
+    btn.classList.add('copied');
+    setTimeout(()=>btn.classList.remove('copied'), 1000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(done).catch(done);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = code; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(err) {}
+    document.body.removeChild(ta);
+    done();
+  }
+}
+
+function renderNeliqTab(){
+  const b = DATA.kpi.branch || {};
+  document.getElementById('neliqKpi').innerHTML = `
+    <div class="kpi" style="--kc:var(--red)"><div class="kpi-label">Неликвиды, филиал</div><div class="kpi-val" style="color:var(--red)">${fmtRub(b.neliquid)}</div><div class="kpi-sub">сумма по действующим менеджерам, без зоны 555</div></div>
+  `;
+  renderRecentNeliqBlock();
+  const mgrs = (DATA.kpi.managers||[]).slice().sort((a,b)=>(b.neliquid||0)-(a.neliquid||0));
+  document.getElementById('neliqBoard').innerHTML = mgrs.map((m,i)=>renderNeliqManagerRow(m,i)).join('');
+}
+document.getElementById('neliqBoard').addEventListener('click', e=>{
+  const copyBtn = e.target.closest('.ni-copy');
+  if (copyBtn){ copyToClipboard(copyBtn); return; }
+
+  const item = e.target.closest('.neliq-item');
+  if (item && !item.classList.contains('no-toggle')){
+    const key = item.dataset.item;
+    const detail = document.querySelector(`.neliq-detail[data-detail="${key}"]`);
+    const willOpen = !item.classList.contains('open');
+    item.classList.toggle('open', willOpen);
+    detail.classList.toggle('open', willOpen);
+    return;
+  }
+  const row = e.target.closest('.mrow');
+  if (row && !row.classList.contains('no-mgr')){
+    const key = row.dataset.mgr;
+    const panel = document.querySelector(`.mpanel[data-panel="n${key}"]`);
+    const willOpen = !row.classList.contains('open');
+    row.classList.toggle('open', willOpen);
+    panel.classList.toggle('open', willOpen);
+  }
 });
 
-render();
+/* ==================== ВКЛАДКА 5: СПЕЦИАЛИСТЫ ==================== */
+function renderSpecialistsTab(){
+  const grid = document.getElementById('selfEntryGrid');
+  const entries = (DATA.kpi.self_entry||[]).slice().sort((a,b)=>a.pct-b.pct);
+  grid.innerHTML = entries.map(e=>{
+    const s = selfEntryColor(e.pct);
+    const w = Math.min((e.pct||0)*100,100);
+    return `
+    <div class="selfentry-card">
+      <div class="se-name">${shortName(e.name)}</div>
+      <div class="se-bar"><i style="width:${w}%; --c:${s.c}"></i></div>
+      <div class="se-foot"><span>${fmtInt(e.own)} из ${fmtInt(e.total)} строк</span><span class="se-pct" style="--c:${s.c}">${fmtPct(e.pct)}</span></div>
+    </div>`;
+  }).join('');
+
+  const board = document.getElementById('specBoard');
+  const specs = DATA.kpi.specialists || [];
+  board.innerHTML = specs.map((s,i)=>{
+    const st = statusColor(s.pct);
+    const w = Math.min((s.pct||0)*100,100);
+    const rc = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    return `
+    <div class="spec-row rank-${i+1<=3?i+1:'x'}">
+      <div class="spec-rank ${rc}">${i+1}</div>
+      <div class="spec-avatar ${rc}">${animalFor(s.name)}</div>
+      <div class="spec-name">${shortName(s.name)}${i===0?' \u{1F525}':''}</div>
+      <div class="spec-bar-wrap"><div class="spec-bar"><i style="width:${w}%; --c:${st.c}"></i></div></div>
+      <div class="spec-nums"><span class="lbl">Строк / Норматив</span>${fmtInt(s.total)} / ${fmtInt(s.norm)}</div>
+      <div class="spec-pctbadge" style="--c:${st.c}; --bgc:${st.bg}">${fmtPct(s.pct)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ==================== ИНИЦИАЛИЗАЦИЯ ==================== */
+renderManagersTab();
+renderBrandsKpi();
+renderBrandRows();
+renderAkbTab();
+renderNeliqTab();
+renderSpecialistsTab();
+updateChrome('managers');
 </script>
 </body>
 </html>
