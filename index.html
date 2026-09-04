@@ -617,13 +617,13 @@ function renderManagersTab(){
 
   document.getElementById('mgrKpiShip').innerHTML = `
     <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Отгрузка, план</div><div class="kpi-val">${fmtRub(b.plan)}</div><div class="kpi-sub">филиал</div></div>
-    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Отгрузка, факт</div><div class="kpi-val">${fmtRub(b.fact)}</div><div class="kpi-sub">на снимок</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">Отгрузка, факт</div><div class="kpi-val">${fmtRub(b.fact)}</div><div class="kpi-sub"> </div></div>
     <div class="kpi" style="--kc:${sShip.c}"><div class="kpi-label">% выполнения</div><div class="kpi-val" style="color:${sShip.c}">${fmtPct(b.pct)}</div><div class="kpi-sub">факт / план</div></div>
     <div class="kpi" style="--kc:${sShip.c}"><div class="kpi-label">Динамика по отгрузке</div><div class="kpi-val" style="color:${sShip.c}">${fmtPct(b.dyn)}</div><div class="kpi-sub">темп к графику месяца</div></div>
   `;
   document.getElementById('mgrKpiVd').innerHTML = `
     <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">ВД, план</div><div class="kpi-val">${fmtRub(b.vd_plan)}</div><div class="kpi-sub">филиал</div></div>
-    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">ВД, факт</div><div class="kpi-val">${fmtRub(b.vd_fact)}</div><div class="kpi-sub">на снимок</div></div>
+    <div class="kpi" style="--kc:var(--ink-dim)"><div class="kpi-label">ВД, факт</div><div class="kpi-val">${fmtRub(b.vd_fact)}</div><div class="kpi-sub"> </div></div>
     <div class="kpi" style="--kc:${sVd.c}"><div class="kpi-label">% выполнения ВД</div><div class="kpi-val" style="color:${sVd.c}">${fmtPct(b.vd_pct)}</div><div class="kpi-sub">факт / план</div></div>
     <div class="kpi" style="--kc:${sVd.c}"><div class="kpi-label">Динамика по ВД</div><div class="kpi-val" style="color:${sVd.c}">${fmtPct(b.vd_dyn)}</div><div class="kpi-sub">темп к графику месяца</div></div>
     <div class="kpi" style="--kc:var(--amber)"><div class="kpi-label">Наценка</div><div class="kpi-val">${fmtPct(b.markup)}</div><div class="kpi-sub">филиал</div></div>
