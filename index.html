@@ -442,9 +442,13 @@ body.xmas h1{position:relative; display:inline-block;}
 .xmas-art{display:flex; align-items:flex-end; gap:4px; margin-right:16px; pointer-events:none;}
 .xmas-art svg{height:62px; width:auto; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));}
 .xmas-art svg.sm{height:44px;}
+#xmasBtn,#xmasMus{background:transparent;}
 #xmasBtn{margin-left:auto; background:transparent; border:1px solid var(--line); color:var(--ink-dim); border-radius:999px; font:inherit; font-size:12px; padding:3px 11px; cursor:pointer; align-self:center; white-space:nowrap;}
-#xmasBtn:hover{color:var(--ink); border-color:var(--ink-faint);}
+#xmasMus{margin-left:8px; border:1px solid var(--line); color:var(--ink-dim); border-radius:999px; font:inherit; font-size:12px; padding:3px 11px; cursor:pointer; align-self:center; white-space:nowrap;}
+#xmasBtn:hover,#xmasMus:hover{color:var(--ink); border-color:var(--ink-faint);}
 #xmasBtn.on{color:#9FD6FF; border-color:rgba(159,214,255,.45);}
+#xmasMus.on{color:#F7D358; border-color:rgba(247,211,88,.45);}
+#xmasMus{display:none;} body.xmas #xmasMus{display:inline-block;}
 .xmas-scene{display:none;}
 body.xmas .xmas-scene{display:block; overflow:hidden; padding-bottom:2px; position:relative; margin-top:26px; pointer-events:none;}
 .xmas-scene .row{display:flex; align-items:flex-end; justify-content:center; gap:clamp(8px,3vw,36px); padding:0 10px; position:relative; z-index:2;}
@@ -1415,6 +1419,54 @@ updateChrome('managers');
   document.addEventListener('visibilitychange',function(){ if(!on) return; if(document.hidden){ if(rafId){cancelAnimationFrame(rafId);rafId=0;} } else if(!reduce && !rafId) rafId=requestAnimationFrame(tick); });
   window.addEventListener('resize',function(){ if(!on) return; buildGarland(); if(snowCv) sizeSnow(); });
 
+
+  /* ---- музыка (синтез в браузере, без файлов): Jingle Bells + В лесу родилась ёлочка ---- */
+  var N={C3:130.81,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440};
+  function seq(str,beat){ var t=0,o=[]; str.trim().split(' ').filter(Boolean).forEach(function(x){ var p=x.split(':'), b=parseFloat(p[1]||'1'); if(p[0]!=='R') o.push([N[p[0]],t*beat,b*beat*0.92]); t+=b; }); return {n:o,len:t*beat}; }
+  var JB=seq('E4:1 E4:1 E4:2 E4:1 E4:1 E4:2 E4:1 G4:1 C4:1.5 D4:.5 E4:4 F4:1 F4:1 F4:1.5 F4:.5 F4:1 E4:1 E4:1 E4:.5 E4:.5 E4:1 D4:1 D4:1 E4:1 D4:2 G4:2 '+
+             'E4:1 E4:1 E4:2 E4:1 E4:1 E4:2 E4:1 G4:1 C4:1.5 D4:.5 E4:4 F4:1 F4:1 F4:1.5 F4:.5 F4:1 E4:1 E4:1 E4:.5 E4:.5 G4:1 G4:1 F4:1 D4:1 C4:4',.5);
+  var YO=seq('G3:1 E4:1 E4:1 D4:1 E4:1 C4:1 G3:1 G3:2 R:1 G3:1 E4:1 E4:1 F4:1 D4:1 G4:2 R:1 G4:1 A3:1 A3:1 F4:1 F4:1 E4:1 D4:1 C4:2 R:1 G3:1 E4:1 E4:1 D4:1 E4:1 C4:1 G3:2 R:1 C4:1 A3:1 A3:1 F4:1 F4:1 E4:1 D4:1 C4:2 R:1 G3:1 E4:1 E4:1 D4:1 E4:1 C4:3 R:2',.6);
+  var SONGS=[JB,YO], actx=null, master=null, mTimer=0, mIdx=0, playing=false;
+  function bell(f,t0,dur){
+    var o=actx.createOscillator(), o2=actx.createOscillator(), g=actx.createGain();
+    o.type='sine'; o.frequency.value=f; o2.type='sine'; o2.frequency.value=f*2.0;
+    var g2=actx.createGain(); g2.gain.value=.25; o2.connect(g2); g2.connect(g); o.connect(g); g.connect(master);
+    g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.9,t0+.012); g.gain.exponentialRampToValueAtTime(.0008,t0+Math.max(.5,dur+.5));
+    o.start(t0); o2.start(t0); o.stop(t0+dur+.7); o2.stop(t0+dur+.7);
+  }
+  function playNext(){
+    if(!playing) return;
+    var sg=SONGS[mIdx%SONGS.length]; mIdx++;
+    var t0=actx.currentTime+.15;
+    sg.n.forEach(function(x){ bell(x[0],t0+x[1],x[2]); });
+    mTimer=setTimeout(playNext,(sg.len+2.5)*1000);
+  }
+  function startMusic(){
+    try{
+      if(!actx){ var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false; actx=new AC(); master=actx.createGain(); master.gain.value=0; master.connect(actx.destination); }
+      if(actx.state==='suspended') actx.resume();
+      master.gain.cancelScheduledValues(actx.currentTime); master.gain.setValueAtTime(master.gain.value,actx.currentTime); master.gain.linearRampToValueAtTime(.07,actx.currentTime+2.5);
+      if(!playing){ playing=true; playNext(); }
+      return true;
+    }catch(e){ return false; }
+  }
+  function stopMusic(){
+    playing=false; clearTimeout(mTimer);
+    if(actx&&master){ try{ master.gain.cancelScheduledValues(actx.currentTime); master.gain.setValueAtTime(master.gain.value,actx.currentTime); master.gain.linearRampToValueAtTime(0,actx.currentTime+.4); }catch(e){} var a=actx; setTimeout(function(){ if(!playing){ try{a.suspend();}catch(e){} } },600); }
+  }
+  var musPref=null; try{ musPref=localStorage.getItem('xmasMusic'); }catch(e){}
+  var armed=false, mbtn=null;
+  function setMus(){ if(!mbtn) return; mbtn.className=playing?'on':''; mbtn.textContent=playing?'\u266A Музыка: вкл':'\u266A Музыка: выкл'; mbtn.title=playing?'Выключить музыку':'Включить тихую новогоднюю музыку'; }
+  function firstClick(){
+    if(!armed) return; armed=false;
+    if(on && musPref!=='off'){ if(startMusic()) setMus(); }
+  }
+  document.addEventListener('pointerdown',firstClick,true);
+  document.addEventListener('keydown',firstClick,true);
+  document.addEventListener('visibilitychange',function(){
+    if(!actx||!playing) return;
+    if(document.hidden){ try{actx.suspend();}catch(e){} } else { try{actx.resume();}catch(e){} }
+  });
   function decorate(){
     var hd=document.querySelector('header');
     if(!garland){ garland=document.createElement('div'); garland.id='xmasGarland'; document.body.insertBefore(garland,document.body.firstChild); }
@@ -1432,15 +1484,18 @@ updateChrome('managers');
     body.classList.toggle('xmas',on);
     ['xmasGarland','xmasGreet','xmasArt'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display=on?'':'none'; });
     var hat=document.querySelector('.xmas-hat'); if(hat) hat.style.display=on?'':'none';
-    if(on){ buildGarland(); startSnow(); } else stopSnow();
-    setBtn();
+    if(on){ buildGarland(); startSnow(); } else { stopSnow(); stopMusic(); }
+    setBtn(); setMus(); if(on && musPref!=='off' && !playing) armed=true;
   }
   function init(){
     decorate();
     var tb=document.getElementById('tabbar');
     if(tb){ btn=document.createElement('button'); btn.id='xmasBtn'; btn.type='button'; tb.appendChild(btn);
       btn.addEventListener('click',function(e){ e.stopPropagation(); on=!on; try{localStorage.setItem('xmasTheme',on?'on':'off');}catch(x){} apply(); }); }
-    apply();
+    mbtn=document.createElement('button'); mbtn.id='xmasMus'; mbtn.type='button'; if(tb) tb.appendChild(mbtn);
+    mbtn.addEventListener('pointerdown',function(e){ armed=false; });
+    mbtn.addEventListener('click',function(e){ e.stopPropagation(); if(playing){ stopMusic(); musPref='off'; } else { if(startMusic()) musPref='on'; } try{localStorage.setItem('xmasMusic',musPref||'on');}catch(x){} setMus(); });
+    armed=true; apply();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
